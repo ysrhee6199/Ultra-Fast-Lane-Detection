@@ -1,5 +1,6 @@
 import torch, os
 from model.model import parsingNet
+from utils import global_config
 from utils.common import merge_config
 from utils.dist_utils import dist_print
 from evaluation.eval_wrapper import eval_lane
@@ -7,7 +8,10 @@ import torch
 if __name__ == "__main__":
     torch.backends.cudnn.benchmark = True
 
-    args, cfg = merge_config()
+    global_config.init()
+    # args, cfg = merge_config()
+    args = global_config.args
+    cfg = global_config.cfg
 
     distributed = False
     if 'WORLD_SIZE' in os.environ:
@@ -19,12 +23,7 @@ if __name__ == "__main__":
     dist_print('start testing...')
     assert cfg.backbone in ['18','34','50','101','152','50next','101next','50wide','101wide']
 
-    if cfg.dataset == 'CULane':
-        cls_num_per_lane = 18
-    elif cfg.dataset == 'Tusimple':
-        cls_num_per_lane = 56
-    else:
-        raise NotImplementedError
+    cls_num_per_lane = cfg.cls_num_per_lane
 
     net = parsingNet(pretrained = False, backbone=cfg.backbone,cls_dim = (cfg.griding_num+1,cls_num_per_lane, cfg.num_lanes),
                     use_aux=False).cuda() # we dont need auxiliary segmentation in testing

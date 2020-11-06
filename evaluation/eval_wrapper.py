@@ -50,7 +50,7 @@ def run_test(net, data_root, exp_name, work_dir, griding_num, use_aux,distribute
     if not os.path.exists(output_path) and is_main_process():
         os.mkdir(output_path)
     synchronize()
-    loader = get_test_loader(batch_size, data_root, 'CULane', distributed)
+    loader = get_test_loader(batch_size, data_root, distributed, 'list/test.txt')  # Culane, TODO: get from cfg (test_txt)
     # import pdb;pdb.set_trace()
     for i, data in enumerate(dist_tqdm(loader)):
         imgs, names = data
@@ -85,7 +85,7 @@ def generate_tusimple_lines(out,shape,griding_num,localization_type='rel'):
 def run_test_tusimple(net,data_root,work_dir,exp_name,griding_num,use_aux, distributed,batch_size = 8):
     output_path = os.path.join(work_dir,exp_name+'.%d.txt'% get_rank())
     fp = open(output_path,'w')
-    loader = get_test_loader(batch_size,data_root,'Tusimple', distributed)
+    loader = get_test_loader(batch_size,data_root, distributed, None)  # Tusimple TODO: get 'None' from cfg (test_txt)
     for i,data in enumerate(dist_tqdm(loader)):
         imgs,names = data
         imgs = imgs.cuda()

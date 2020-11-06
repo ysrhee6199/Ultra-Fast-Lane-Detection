@@ -1,8 +1,10 @@
 # DATA
 dataset='CULane'
 data_root = None
+cls_num_per_lane = 18   # number of h_samples; not determining automatically because only available during training (test). TODO: should be determined automatically and stored together with model
 
 # TRAIN
+train_gt = 'list/train_gt.txt'
 epoch = 50
 batch_size = 32
 optimizer = 'SGD'  #['SGD','Adam']
@@ -37,9 +39,9 @@ resume = None
 # TEST
 test_model = None
 test_work_dir = None
+test_txt = 'list/test.txt'  # default: test.txt
 
 num_lanes = 4
-
 
 
 

@@ -3,6 +3,10 @@ from utils.dist_utils import is_main_process, dist_print, DistSummaryWriter
 from utils.config import Config
 import torch
 
+
+def get_cfg():
+    return cfg
+
 def str2bool(v):
     if isinstance(v, bool):
        return v
@@ -43,6 +47,9 @@ def get_args():
     parser.add_argument('--test_model', default = None, type = str)
     parser.add_argument('--test_work_dir', default = None, type = str)
     parser.add_argument('--num_lanes', default = None, type = int)
+    parser.add_argument('--train_gt', default = 'train_gt.txt', type = str)
+    parser.add_argument('--cls_num_per_lane', default = None, type = int)
+    parser.add_argument('--test_txt', default = 'test.txt', type = str)
     return parser
 
 def merge_config():
@@ -52,7 +59,8 @@ def merge_config():
     items = ['dataset','data_root','epoch','batch_size','optimizer','learning_rate',
     'weight_decay','momentum','scheduler','steps','gamma','warmup','warmup_iters',
     'use_aux','griding_num','backbone','sim_loss_w','shp_loss_w','note','log_path',
-    'finetune','resume', 'test_model','test_work_dir', 'num_lanes']
+    'finetune','resume', 'test_model','test_work_dir', 'num_lanes', 'train_gt', 'cls_num_per_lane', 'test_txt']
+    # following cfgs cant be set via cli: 'h_samples'
     for item in items:
         if getattr(args, item) is not None:
             dist_print('merge ', item, ' config')

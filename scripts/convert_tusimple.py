@@ -136,18 +136,20 @@ def generate_segmentation_and_train_list(root, line_txt, names):
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--root', required=True, help='The root of the Tusimple dataset')
+    parser.add_argument('--train_files', required=False, help='comma seperated list of json files containing train data')
+    parser.add_argument('--test_files', required=False, help='comma seperated list of json files containing test data')
     return parser
 
 if __name__ == "__main__":
     args = get_args().parse_args()
 
     # training set
-    names,line_txt = get_tusimple_list(args.root,  ['label_data_0601.json','label_data_0531.json','label_data_0313.json'])
+    names,line_txt = get_tusimple_list(args.root, args.train_files.split(',') if args.train_files else ['label_data_0601.json','label_data_0531.json','label_data_0313.json'])
     # generate segmentation and training list for training
     generate_segmentation_and_train_list(args.root, line_txt, names)
 
     # testing set
-    names,line_txt = get_tusimple_list(args.root, ['test_tasks_0627.json'])
+    names,line_txt = get_tusimple_list(args.root, args.test_files.split(',') if args.test_files else ['test_tasks_0627.json'])
     # generate testing set for testing
     with open(os.path.join(args.root,'test.txt'),'w') as fp:
         for name in names:

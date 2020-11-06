@@ -3,9 +3,11 @@ import numpy as np
 
 from model.model import parsingNet
 from data.dataloader import get_train_loader
+from utils import global_config
 
 from utils.dist_utils import dist_print, dist_tqdm, is_main_process, DistSummaryWriter
 from utils.factory import get_metric_dict, get_loss_dict, get_optimizer, get_scheduler
+from utils.global_config import init
 from utils.metrics import MultiLabelAcc, AccTopk, Metric_mIoU, update_metrics, reset_metrics
 
 from utils.common import merge_config, save_model, cp_projects
@@ -95,7 +97,11 @@ def train(net, data_loader, loss_dict, optimizer, scheduler,logger, epoch, metri
 if __name__ == "__main__":
     torch.backends.cudnn.benchmark = True
 
-    args, cfg = merge_config()
+    global_config.init()
+    # args, cfg = merge_config()
+    args = global_config.args
+    cfg = global_config.cfg
+
 
     work_dir = get_work_dir(cfg)
 
@@ -111,7 +117,8 @@ if __name__ == "__main__":
     assert cfg.backbone in ['18','34','50','101','152','50next','101next','50wide','101wide']
 
 
-    train_loader, cls_num_per_lane = get_train_loader(cfg.batch_size, cfg.data_root, cfg.griding_num, cfg.dataset, cfg.use_aux, distributed, cfg.num_lanes)
+    train_loader = get_train_loader(cfg.batch_size, cfg.data_root, cfg.griding_num, cfg.dataset, cfg.use_aux, distributed, cfg.num_lanes, cfg.train_gt)
+    cls_num_per_lane = cfg.cls_num_per_lane
 
     net = parsingNet(pretrained = True, backbone=cfg.backbone,cls_dim = (cfg.griding_num+1,cls_num_per_lane, cfg.num_lanes),use_aux=cfg.use_aux).cuda()
 

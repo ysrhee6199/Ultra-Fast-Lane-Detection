@@ -1,5 +1,6 @@
 import torch, os, cv2
 from model.model import parsingNet
+from utils import global_config
 from utils.common import merge_config
 from utils.dist_utils import dist_print
 import torch
@@ -7,22 +8,20 @@ import scipy.special, tqdm
 import numpy as np
 import torchvision.transforms as transforms
 from data.dataset import LaneTestDataset
-from data.constant import culane_row_anchor, tusimple_row_anchor
+from data.constant import culane_row_anchor, tusimple_row_anchor, gen_row_anchor
 
 if __name__ == "__main__":
     torch.backends.cudnn.benchmark = True
 
-    args, cfg = merge_config()
+    global_config.init()
+    # args, cfg = merge_config()
+    args = global_config.args
+    cfg = global_config.cfg
 
     dist_print('start testing...')
     assert cfg.backbone in ['18','34','50','101','152','50next','101next','50wide','101wide']
 
-    if cfg.dataset == 'CULane':
-        cls_num_per_lane = 18
-    elif cfg.dataset == 'Tusimple':
-        cls_num_per_lane = 56
-    else:
-        raise NotImplementedError
+    cls_num_per_lane = cfg.cls_num_per_lane
 
     net = parsingNet(pretrained = False, backbone=cfg.backbone,cls_dim = (cfg.griding_num+1,cls_num_per_lane,4),
                     use_aux=False).cuda() # we dont need auxiliary segmentation in testing
@@ -43,18 +42,17 @@ if __name__ == "__main__":
         transforms.ToTensor(),
         transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
     ])
-    if cfg.dataset == 'CULane':
-        splits = ['test0_normal.txt', 'test1_crowd.txt', 'test2_hlight.txt', 'test3_shadow.txt', 'test4_noline.txt', 'test5_arrow.txt', 'test6_curve.txt', 'test7_cross.txt', 'test8_night.txt']
-        datasets = [LaneTestDataset(cfg.data_root,os.path.join(cfg.data_root, 'list/test_split/'+split),img_transform = img_transforms) for split in splits]
-        img_w, img_h = 1640, 590
-        row_anchor = culane_row_anchor
-    elif cfg.dataset == 'Tusimple':
-        splits = ['test.txt']
-        datasets = [LaneTestDataset(cfg.data_root,os.path.join(cfg.data_root, split),img_transform = img_transforms) for split in splits]
-        img_w, img_h = 1280, 720
-        row_anchor = tusimple_row_anchor
-    else:
-        raise NotImplementedError
+    # if cfg.dataset == 'CULane':
+    #     splits = ['test0_normal.txt', 'test1_crowd.txt', 'test2_hlight.txt', 'test3_shadow.txt', 'test4_noline.txt', 'test5_arrow.txt', 'test6_curve.txt', 'test7_cross.txt', 'test8_night.txt']
+    #     datasets = [LaneTestDataset(cfg.data_root,os.path.join(cfg.data_root, 'list/test_split/'+split),img_transform = img_transforms) for split in splits]
+    #     img_w, img_h = 1640, 590
+    #     row_anchor = culane_row_anchor
+    # elif cfg.dataset == 'Tusimple':
+    splits = cfg.test_splits
+    datasets = [LaneTestDataset(cfg.data_root,os.path.join(cfg.data_root, split),img_transform = img_transforms) for split in splits]
+    img_w, img_h = cfg.img_width, cfg.img_height
+    row_anchor = gen_row_anchor()
+
     for split, dataset in zip(splits, datasets):
         loader = torch.utils.data.DataLoader(dataset, batch_size=1, shuffle = False, num_workers=1)
         fourcc = cv2.VideoWriter_fourcc(*'MJPG')

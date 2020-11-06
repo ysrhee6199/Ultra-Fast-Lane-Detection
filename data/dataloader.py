@@ -3,10 +3,10 @@ import numpy as np
 
 import torchvision.transforms as transforms
 import data.mytransforms as mytransforms
-from data.constant import tusimple_row_anchor, culane_row_anchor
+from data.constant import tusimple_row_anchor, culane_row_anchor, gen_row_anchor
 from data.dataset import LaneClsDataset, LaneTestDataset
 
-def get_train_loader(batch_size, data_root, griding_num, dataset, use_aux, distributed, num_lanes):
+def get_train_loader(batch_size, data_root, griding_num, dataset, use_aux, distributed, num_lanes, train_gt):
     target_transform = transforms.Compose([
         mytransforms.FreeScaleMask((288, 800)),
         mytransforms.MaskToTensor(),
@@ -25,27 +25,14 @@ def get_train_loader(batch_size, data_root, griding_num, dataset, use_aux, distr
         mytransforms.RandomUDoffsetLABEL(100),
         mytransforms.RandomLROffsetLABEL(200)
     ])
-    if dataset == 'CULane':
-        train_dataset = LaneClsDataset(data_root,
-                                           os.path.join(data_root, 'list/train_gt.txt'),
-                                           img_transform=img_transform, target_transform=target_transform,
-                                           simu_transform = simu_transform,
-                                           segment_transform=segment_transform, 
-                                           row_anchor = culane_row_anchor,
-                                           griding_num=griding_num, use_aux=use_aux, num_lanes = num_lanes)
-        cls_num_per_lane = 18
-
-    elif dataset == 'Tusimple':
-        train_dataset = LaneClsDataset(data_root,
-                                           os.path.join(data_root, 'train_gt.txt'),
-                                           img_transform=img_transform, target_transform=target_transform,
-                                           simu_transform = simu_transform,
-                                           griding_num=griding_num, 
-                                           row_anchor = tusimple_row_anchor,
-                                           segment_transform=segment_transform,use_aux=use_aux, num_lanes = num_lanes)
-        cls_num_per_lane = 56
-    else:
-        raise NotImplementedError
+    train_dataset = LaneClsDataset(data_root,
+                                   os.path.join(data_root, train_gt),
+                                   img_transform=img_transform, target_transform=target_transform,
+                                   simu_transform=simu_transform,
+                                   segment_transform=segment_transform,
+                                   row_anchor=gen_row_anchor(),
+                                   # row_anchor=culane_row_anchor,
+                                   griding_num=griding_num, use_aux=use_aux, num_lanes=num_lanes)
 
     if distributed:
         sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
@@ -54,20 +41,15 @@ def get_train_loader(batch_size, data_root, griding_num, dataset, use_aux, distr
 
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, sampler = sampler, num_workers=4)
 
-    return train_loader, cls_num_per_lane
+    return train_loader
 
-def get_test_loader(batch_size, data_root,dataset, distributed):
+def get_test_loader(batch_size, data_root, distributed, test_txt):
     img_transforms = transforms.Compose([
         transforms.Resize((288, 800)),
         transforms.ToTensor(),
         transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
     ])
-    if dataset == 'CULane':
-        test_dataset = LaneTestDataset(data_root,os.path.join(data_root, 'list/test.txt'),img_transform = img_transforms)
-        cls_num_per_lane = 18
-    elif dataset == 'Tusimple':
-        test_dataset = LaneTestDataset(data_root,os.path.join(data_root, 'test.txt'), img_transform = img_transforms)
-        cls_num_per_lane = 56
+    test_dataset = LaneTestDataset(data_root, os.path.join(data_root, test_txt if test_txt else 'test.txt'), img_transform=img_transforms)
 
     if distributed:
         sampler = SeqDistributedSampler(test_dataset, shuffle = False)

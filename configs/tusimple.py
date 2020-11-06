@@ -1,8 +1,10 @@
 # DATA
 dataset='Tusimple'
-data_root = None
+data_root = '/home/markus/master_project/tusimpleroot/'
+cls_num_per_lane = 56   # number of h_samples; not determining automatically because only available during training (test). TODO: should be determined automatically and stored together with model
 
 # TRAIN
+train_gt = 'train_gt.txt'
 epoch = 100
 batch_size = 32
 optimizer = 'Adam'    #['SGD','Adam']
@@ -29,7 +31,7 @@ shp_loss_w = 0.0
 # EXP
 note = ''
 
-log_path = None
+log_path = '/home/markus/master_project/tusimpleroot/log/'
 
 # FINETUNE or RESUME MODEL PATH
 finetune = None
@@ -38,5 +40,6 @@ resume = None
 # TEST
 test_model = None
 test_work_dir = None
+test_txt = None  # default: test.txt
 
 num_lanes = 4
