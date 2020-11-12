@@ -1,25 +1,22 @@
 import torch, os
-import numpy as np
 
 import torchvision.transforms as transforms
 import data.mytransforms as mytransforms
-from data.constant import tusimple_row_anchor, culane_row_anchor, gen_row_anchor
+from data.constant import gen_row_anchor, default_img_transforms
 from data.dataset import LaneClsDataset, LaneTestDataset
+from utils import global_config
 
-def get_train_loader(batch_size, data_root, griding_num, dataset, use_aux, distributed, num_lanes, train_gt):
+
+def get_train_loader(batch_size, data_root, griding_num, use_aux, distributed, num_lanes, train_gt):
     target_transform = transforms.Compose([
-        mytransforms.FreeScaleMask((288, 800)),
+        mytransforms.FreeScaleMask((global_config.cfg.train_img_height, global_config.cfg.train_img_width)),
         mytransforms.MaskToTensor(),
     ])
     segment_transform = transforms.Compose([
-        mytransforms.FreeScaleMask((36, 100)),
+        mytransforms.FreeScaleMask((int(global_config.cfg.train_img_height / 8), int(global_config.cfg.train_img_width / 8))),
         mytransforms.MaskToTensor(),
     ])
-    img_transform = transforms.Compose([
-        transforms.Resize((288, 800)),
-        transforms.ToTensor(),
-        transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
-    ])
+    img_transform = default_img_transforms
     simu_transform = mytransforms.Compose2([
         mytransforms.RandomRotate(6),
         mytransforms.RandomUDoffsetLABEL(100),
@@ -44,11 +41,7 @@ def get_train_loader(batch_size, data_root, griding_num, dataset, use_aux, distr
     return train_loader
 
 def get_test_loader(batch_size, data_root, distributed, test_txt):
-    img_transforms = transforms.Compose([
-        transforms.Resize((288, 800)),
-        transforms.ToTensor(),
-        transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
-    ])
+    img_transforms = default_img_transforms
     test_dataset = LaneTestDataset(data_root, os.path.join(data_root, test_txt if test_txt else 'test.txt'), img_transform=img_transforms)
 
     if distributed:

@@ -1,8 +1,7 @@
 from utils.common import merge_config
 
+cfg = None
+args = None
 
-def init():
-    global cfg
-    global args
-
+if not cfg:
     args, cfg = merge_config()

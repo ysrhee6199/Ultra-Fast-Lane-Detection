@@ -1,6 +1,6 @@
 # DATA
-dataset='Carla'
-data_root = '/home/markus/PycharmProjects/datasets/Trainingsdatensatz1/'
+dataset=None
+data_root = None
 
 
 # TRAIN
@@ -30,7 +30,7 @@ shp_loss_w = 0.0
 # EXP
 note = ''
 
-log_path = '/home/markus/PycharmProjects/log/carla/'
+log_path = None
 
 # FINETUNE or RESUME MODEL PATH
 finetune = None
@@ -39,7 +39,7 @@ resume = None
 # TEST
 test_model = None
 test_work_dir = None
-test_txt = 'test.txt'  # default: test.txt
+test_txt = 'test.txt'
 test_splits = [test_txt]  # for demo.py
 
 num_lanes = 4
@@ -48,9 +48,16 @@ h_samples = [x for x in range(380, 711, 10)]
 img_height = 720
 img_width = 1280
 
-cls_num_per_lane = len(h_samples)   # number of h_samples; not determining automatically because only available during training (test). TODO: should be determined automatically and stored together with model
+cls_num_per_lane = len(h_samples)
+
+
+# untested, changing these values might not work as expected. If changed use a multiple of 8
+# some (possibly) relations in source code are unclear and might not be adjusted correctly
+train_img_height = 288
+train_img_width = 800
 
 
 
-# ----
+
+
 test_validation_data = 'test.json'

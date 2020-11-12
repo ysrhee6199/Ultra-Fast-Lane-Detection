@@ -2,6 +2,9 @@ import torch
 from model.backbone import resnet
 import numpy as np
 
+from utils import global_config
+
+
 class conv_bn_relu(torch.nn.Module):
     def __init__(self,in_channels, out_channels, kernel_size, stride=1, padding=0, dilation=1,bias=False):
         super(conv_bn_relu,self).__init__()
@@ -16,7 +19,7 @@ class conv_bn_relu(torch.nn.Module):
         x = self.relu(x)
         return x
 class parsingNet(torch.nn.Module):
-    def __init__(self, size=(288, 800), pretrained=True, backbone='50', cls_dim=(37, 10, 4), use_aux=False):
+    def __init__(self, size=(global_config.cfg.train_img_height, global_config.cfg.train_img_width), pretrained=True, backbone='50', cls_dim=(37, 10, 4), use_aux=False):
         super(parsingNet, self).__init__()
 
         self.size = size

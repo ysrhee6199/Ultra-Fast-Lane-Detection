@@ -1,17 +1,17 @@
+from utils import global_config
+
 import torch, os, datetime
-import numpy as np
 
 from model.model import parsingNet
 from data.dataloader import get_train_loader
-from utils import global_config
 
-from utils.dist_utils import dist_print, dist_tqdm, is_main_process, DistSummaryWriter
+from utils.dist_utils import dist_print, dist_tqdm
 from utils.factory import get_metric_dict, get_loss_dict, get_optimizer, get_scheduler
-from utils.global_config import init
-from utils.metrics import MultiLabelAcc, AccTopk, Metric_mIoU, update_metrics, reset_metrics
+from utils.metrics import update_metrics, reset_metrics
 
-from utils.common import merge_config, save_model, cp_projects
+from utils.common import save_model, cp_projects
 from utils.common import get_work_dir, get_logger
+
 
 import time
 
@@ -21,7 +21,7 @@ def inference(net, data_label, use_aux):
         img, cls_label, seg_label = data_label
         img, cls_label, seg_label = img.cuda(), cls_label.cuda(), seg_label.cuda()
         cls_out, seg_out = net(img)
-        return {'cls_out': cls_out, 'cls_label': cls_label, 'seg_out':seg_out, 'seg_label': seg_label}
+        return {'cls_out': cls_out, 'cls_label': cls_label, 'seg_out': seg_out, 'seg_label': seg_label}
     else:
         img, cls_label = data_label
         img, cls_label = img.cuda(), cls_label.cuda()
@@ -48,13 +48,13 @@ def calc_loss(loss_dict, results, logger, global_step):
         loss_cur = loss_dict['op'][i](*datas)
 
         if global_step % 20 == 0:
-            logger.add_scalar('loss/'+loss_dict['name'][i], loss_cur, global_step)
+            logger.add_scalar('loss/' + loss_dict['name'][i], loss_cur, global_step)
 
         loss += loss_cur * loss_dict['weight'][i]
     return loss
 
 
-def train(net, data_loader, loss_dict, optimizer, scheduler,logger, epoch, metric_dict, use_aux):
+def train(net, data_loader, loss_dict, optimizer, scheduler, logger, epoch, metric_dict, use_aux):
     net.train()
     progress_bar = dist_tqdm(train_loader)
     t_data_0 = time.time()
@@ -81,27 +81,20 @@ def train(net, data_loader, loss_dict, optimizer, scheduler,logger, epoch, metri
                 logger.add_scalar('metric/' + me_name, me_op.get(), global_step=global_step)
         logger.add_scalar('meta/lr', optimizer.param_groups[0]['lr'], global_step=global_step)
 
-        if hasattr(progress_bar,'set_postfix'):
+        if hasattr(progress_bar, 'set_postfix'):
             kwargs = {me_name: '%.3f' % me_op.get() for me_name, me_op in zip(metric_dict['name'], metric_dict['op'])}
-            progress_bar.set_postfix(loss = '%.3f' % float(loss), 
-                                    data_time = '%.3f' % float(t_data_1 - t_data_0), 
-                                    net_time = '%.3f' % float(t_net_1 - t_net_0), 
-                                    **kwargs)
+            progress_bar.set_postfix(loss='%.3f' % float(loss),
+                                     data_time='%.3f' % float(t_data_1 - t_data_0),
+                                     net_time='%.3f' % float(t_net_1 - t_net_0),
+                                     **kwargs)
         t_data_0 = time.time()
-        
-
-
-
 
 
 if __name__ == "__main__":
     torch.backends.cudnn.benchmark = True
 
-    global_config.init()
-    # args, cfg = merge_config()
     args = global_config.args
     cfg = global_config.cfg
-
 
     work_dir = get_work_dir(cfg)
 
@@ -114,23 +107,24 @@ if __name__ == "__main__":
         torch.distributed.init_process_group(backend='nccl', init_method='env://')
     dist_print(datetime.datetime.now().strftime('[%Y/%m/%d %H:%M:%S]') + ' start training...')
     dist_print(cfg)
-    assert cfg.backbone in ['18','34','50','101','152','50next','101next','50wide','101wide']
+    assert cfg.backbone in ['18', '34', '50', '101', '152', '50next', '101next', '50wide', '101wide']
 
-
-    train_loader = get_train_loader(cfg.batch_size, cfg.data_root, cfg.griding_num, cfg.dataset, cfg.use_aux, distributed, cfg.num_lanes, cfg.train_gt)
+    train_loader = get_train_loader(cfg.batch_size, cfg.data_root, cfg.griding_num, cfg.use_aux, distributed,
+                                    cfg.num_lanes, cfg.train_gt)
     cls_num_per_lane = cfg.cls_num_per_lane
 
-    net = parsingNet(pretrained = True, backbone=cfg.backbone,cls_dim = (cfg.griding_num+1,cls_num_per_lane, cfg.num_lanes),use_aux=cfg.use_aux).cuda()
+    net = parsingNet(pretrained=True, backbone=cfg.backbone,
+                     cls_dim=(cfg.griding_num + 1, cls_num_per_lane, cfg.num_lanes), use_aux=cfg.use_aux).cuda()
 
     if distributed:
-        net = torch.nn.parallel.DistributedDataParallel(net, device_ids = [args.local_rank])
+        net = torch.nn.parallel.DistributedDataParallel(net, device_ids=[args.local_rank])
     optimizer = get_optimizer(net, cfg)
 
     if cfg.finetune is not None:
         dist_print('finetune from ', cfg.finetune)
         state_all = torch.load(cfg.finetune)['model']
         state_clip = {}  # only use backbone parameters
-        for k,v in state_all.items():
+        for k, v in state_all.items():
             if 'model' in k:
                 state_clip[k] = v
         net.load_state_dict(state_clip, strict=False)
@@ -144,8 +138,6 @@ if __name__ == "__main__":
     else:
         resume_epoch = 0
 
-
-
     scheduler = get_scheduler(optimizer, cfg, len(train_loader))
     dist_print(len(train_loader))
     metric_dict = get_metric_dict(cfg)
@@ -154,8 +146,7 @@ if __name__ == "__main__":
     cp_projects(work_dir)
 
     for epoch in range(resume_epoch, cfg.epoch):
+        train(net, train_loader, loss_dict, optimizer, scheduler, logger, epoch, metric_dict, cfg.use_aux)
 
-        train(net, train_loader, loss_dict, optimizer, scheduler,logger, epoch, metric_dict, cfg.use_aux)
-        
-        save_model(net, optimizer, epoch ,work_dir, distributed)
+        save_model(net, optimizer, epoch, work_dir, distributed)
     logger.close()

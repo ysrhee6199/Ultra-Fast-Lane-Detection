@@ -3,18 +3,16 @@
 import torch
 import time
 import numpy as np
+
+from data.constant import default_img_transforms
 from model.model import parsingNet
-import torchvision.transforms as transforms
 import cv2
-from matplotlib import pyplot as plt
 from PIL import Image
 
+from utils import global_config
+from utils.global_config import cfg
 
-img_transforms = transforms.Compose([
-    transforms.Resize((288, 800)),
-    transforms.ToTensor(),
-    transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
-])
+img_transforms = default_img_transforms
 
 def resize(x, y):
     global cap
@@ -23,6 +21,8 @@ def resize(x, y):
 
 def test_practical_without_readtime():
     global cap
+
+    # seems to be warmup
     for i in range(10):
         _,img = cap.read()
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -34,6 +34,7 @@ def test_practical_without_readtime():
     print("pracrical image input size:",img.shape)
     print("pracrical tensor input size:",x.shape)
     t_all = []
+    # identical to warmup besides it measures execution time of evaluation
     for i in range(100):
         _,img = cap.read()
 
@@ -110,7 +111,7 @@ def test_practical():
     
 ###x = torch.zeros((1,3,288,800)).cuda() + 1
 def test_theoretical():
-    x = torch.zeros((1,3,288,800)).cuda() + 1
+    x = torch.zeros((1,3,global_config.cfg.train_img_height,global_config.cfg.train_img_width)).cuda() + 1
     for i in range(10):
         y = net(x)
     
@@ -141,8 +142,8 @@ if __name__ == "__main__":
     
     
     # torch.backends.cudnn.deterministic = False
-    torch.backends.cudnn.benchmark = True
-    net = parsingNet(pretrained = False, backbone='18',cls_dim = (100+1,56,4),use_aux=False).cuda()
+    torch.backends.cudnn.benchmark = True  # automatically select best algorithms
+    net = parsingNet(pretrained = False, backbone=cfg.backbone,cls_dim = (100+1,56,4),use_aux=False).cuda()
     # net = parsingNet(pretrained = False, backbone='18',cls_dim = (200+1,18,4),use_aux=False).cuda()
     net.eval()
     

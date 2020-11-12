@@ -4,6 +4,7 @@ import numpy as np
 from model.model import parsingNet
 
 # torch.backends.cudnn.deterministic = False
+from utils import global_config
 
 torch.backends.cudnn.benchmark = True
 net = parsingNet(pretrained = False, backbone='18',cls_dim = (100+1,56,4),use_aux=False).cuda()
@@ -11,7 +12,7 @@ net = parsingNet(pretrained = False, backbone='18',cls_dim = (100+1,56,4),use_au
 
 net.eval()
 
-x = torch.zeros((1,3,288,800)).cuda() + 1
+x = torch.zeros((1,3,global_config.cfg.train_img_height,global_config.cfg.train_img_width)).cuda() + 1
 for i in range(10):
     y = net(x)
 

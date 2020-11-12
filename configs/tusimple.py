@@ -1,21 +1,20 @@
 # DATA
-dataset='Tusimple'
+dataset = 'Tusimple'
 data_root = '/home/markus/master_project/tusimpleroot/'
-cls_num_per_lane = 56   # number of h_samples; not determining automatically because only available during training (test). TODO: should be determined automatically and stored together with model
 
 # TRAIN
 train_gt = 'train_gt.txt'
 epoch = 100
-batch_size = 32
-optimizer = 'Adam'    #['SGD','Adam']
+batch_size = 4
+optimizer = 'Adam'  # ['SGD','Adam']
 # learning_rate = 0.1
 learning_rate = 4e-4
 weight_decay = 1e-4
 momentum = 0.9
 
-scheduler = 'cos'     #['multi', 'cos']
+scheduler = 'cos'  # ['multi', 'cos']
 # steps = [50,75]
-gamma  = 0.1
+gamma = 0.1
 warmup = 'linear'
 warmup_iters = 100
 
@@ -41,5 +40,14 @@ resume = None
 test_model = None
 test_work_dir = None
 test_txt = None  # default: test.txt
+test_splits = ['test.txt']  # for demo.py
+
 
 num_lanes = 4
+
+# h_samples = [x for x in range(380, 711, 10)]
+h_samples = [x for x in range(160, 711, 10)]
+img_height = 720
+img_width = 1280
+
+cls_num_per_lane = len(h_samples)   # number of h_samples; not determining automatically because only available during training (test). TODO: should be determined automatically and stored together with model
