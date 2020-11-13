@@ -47,7 +47,7 @@ def simplified_eval_lane(net, dataset, data_root, work_dir, griding_num, use_aux
             print(r['name'], r['value'])
 
 
-def out_test():
+def out_test(predictions, names):
     # this code is .... .... .... .... .... .... .... .... .... .... .... .... .... .... .... .... .... simply wrong xD
     return
     net = None

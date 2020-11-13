@@ -1,6 +1,11 @@
-opencv-python
-tqdm
+opencv-python~=4.4.0.46
+tqdm~=4.50.2
 tensorboard
-addict
-sklearn
-pathspec
+addict~=2.3.0
+sklearn~=0.0
+pathspec~=0.7.0
+numpy~=1.19.2
+pillow~=8.0.1
+torchvision~=0.8.1
+scipy~=1.5.4
+scikit-learn~=0.23.2
