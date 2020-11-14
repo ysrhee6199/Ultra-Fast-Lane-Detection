@@ -66,7 +66,6 @@ class LaneDataset(torch.utils.data.Dataset):
         #
         # return
 
-        print(index, flush=True)
         name = self.list[index].split()[0]
         img_path = os.path.join(self.data_root, name)
         img = Image.open(img_path)
