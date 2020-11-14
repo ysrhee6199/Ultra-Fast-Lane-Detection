@@ -35,10 +35,10 @@ class ImageOut:
             enable_image_export: save as image files to disk (default: False)
             enable_line_mode: visualization as lines instead of dots (default: False)
         """
-        self.enable_live_video = enable_live_video,
-        self.enable_video_export = enable_video_export,
-        self.enable_image_export = enable_image_export,
-        self.enable_line_mode = enable_line_mode,
+        self.enable_live_video = enable_live_video
+        self.enable_video_export = enable_video_export
+        self.enable_image_export = enable_image_export
+        self.enable_line_mode = enable_line_mode
 
         if enable_video_export:
             # init video out
@@ -49,14 +49,14 @@ class ImageOut:
 
     def out(self, y, names):
         """
-        Generate video output
+        Generate visual output
         Args:
             y: network result (list of samples)
             names: filenames for y
         """
         # iterate over samples
-        for i in range(0, len(y)):
-            lanes = np.array(map_x_to_image(evaluate_predictions(y[i])))  # get coordinates es based on probabilities
+        for i in range(len(y)):
+            lanes = np.array(map_x_to_image(evaluate_predictions(y[i])))  # get x coordinates based on probabilities
 
             vis = cv2.imread(os.path.join(cfg.data_root, names[i]))
             for i in range(lanes.shape[0]):  # iterate over lanes

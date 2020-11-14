@@ -19,6 +19,7 @@ import torch
 
 from runtime.input_modules.input_images import input_images
 from model.model import parsingNet
+from runtime.out_modules.out_json import JsonOut
 from runtime.out_modules.out_prod import ProdOut
 from runtime.out_modules.out_test import out_test
 from runtime.out_modules.out_video import ImageOut
@@ -40,7 +41,10 @@ def setup_net():
         backbone=cfg.backbone,
         cls_dim=(cfg.griding_num + 1, cfg.cls_num_per_lane, cfg.num_lanes),
         use_aux=False
-    ).cuda()  # TODO: dont know what use_aux exactly does, might be possible this should be enabled on prod output
+    ).cuda()
+    # It should be noted that our method only uses the auxiliary segmentation task in the training phase, and it would
+    # be removed in the testing phase. In this way, even we added the extra segmentation task, the running speed of our
+    # method would not be affected.
     net.eval()
 
     # load and apply our trained model
@@ -62,11 +66,11 @@ def setup_input(process_frame):
     Args:
         process_frame: function taking list of frames and a corresponding list of filenames
     """
-    if (cfg.input_mode == 'images'):
+    if cfg.input_mode == 'images':
         input_images(process_frame, os.path.join(cfg.data_root, cfg.test_txt), cfg.data_root)
-    elif (cfg.input_mode == 'video'):
+    elif cfg.input_mode == 'video':
         raise NotImplemented
-    elif (cfg.input_mode == 'stream'):
+    elif cfg.input_mode == 'stream':
         raise NotImplemented
     else:
         print(cfg.input_mode)
@@ -78,12 +82,14 @@ def setup_out_method():
     setup the output method
     Returns: method/function reference to a function taking a list of predictions and a list of corresponding filenames
     """
-    if (cfg.output_mode == 'video'):
+    if cfg.output_mode == 'video':
         video_out = ImageOut()
         return video_out.out
-    elif (cfg.output_mode == 'test'):
-        out_test()
-    elif (cfg.output_mode == 'prod'):
+    elif cfg.output_mode == 'test':
+        return out_test
+    elif cfg.output_mode == 'json':
+        return JsonOut().out
+    elif cfg.output_mode == 'prod':
         return ProdOut().out
     else:
         print(cfg.output_mode)
