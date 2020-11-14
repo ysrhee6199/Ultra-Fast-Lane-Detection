@@ -19,3 +19,10 @@ class ProdOut:
         """
         for i in range(0, len(y)):
             print(y[i])
+
+    def post(self):
+        """
+        Called after dataset/video/whatever was completely processed. You can do things like cleanup or printing
+        stats here
+        """
+        print("finished")

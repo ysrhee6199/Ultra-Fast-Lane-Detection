@@ -21,7 +21,7 @@ from runtime.input_modules.input_images import input_images
 from model.model import parsingNet
 from runtime.out_modules.out_json import JsonOut
 from runtime.out_modules.out_prod import ProdOut
-from runtime.out_modules.out_test import out_test
+from runtime.out_modules.out_test import TestOut
 from runtime.out_modules.out_video import ImageOut
 from utils.global_config import cfg
 
@@ -84,13 +84,15 @@ def setup_out_method():
     """
     if cfg.output_mode == 'video':
         video_out = ImageOut()
-        return video_out.out
+        return video_out.out, lambda: None
     elif cfg.output_mode == 'test':
-        return out_test
+        test_out = TestOut()
+        return test_out.out, test_out.post
     elif cfg.output_mode == 'json':
-        return JsonOut().out
+        return JsonOut().out, lambda: None
     elif cfg.output_mode == 'prod':
-        return ProdOut().out
+        prod_out = ProdOut()
+        return prod_out.out, prod_out.post
     else:
         print(cfg.output_mode)
         raise NotImplemented('unknown/unsupported output_mode')
@@ -119,7 +121,8 @@ class FrameProcessor:
 
 
 if __name__ == "__main__":
-    out_method = setup_out_method()
+    out_method, post_method = setup_out_method()
     net = setup_net()
     frame_processor = FrameProcessor(net, out_method)
     setup_input(frame_processor.process_frame)
+    post_method()  # called when input method is finished (post processing)

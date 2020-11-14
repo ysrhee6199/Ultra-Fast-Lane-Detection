@@ -39,7 +39,7 @@ class JsonOut:
         """
         # iterate over samples
         for i in range(len(y)):
-            lanes = np.array(map_x_to_image(evaluate_predictions(y[i])))  # get x coordinates based on probabilities
+            lanes = map_x_to_image(evaluate_predictions(y[i]))  # get x coordinates based on probabilities
 
             json_string = json.dumps({
                 'lanes': lanes,
