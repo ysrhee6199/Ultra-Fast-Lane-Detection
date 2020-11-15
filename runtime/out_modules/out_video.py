@@ -1,4 +1,5 @@
 import os
+import time
 
 import cv2
 import numpy as np
@@ -12,7 +13,7 @@ def get_lane_color(i):
     return lane_colors[i % 5]
 
 
-class ImageOut:
+class VisualOut:
     """
     provides the ability to different visual output types
     - live video
@@ -47,18 +48,28 @@ class ImageOut:
             out_full_path = os.path.join(cfg.log_path, out_filename)
             self.vout = cv2.VideoWriter(out_full_path, fourcc, 30.0, (cfg.img_width, cfg.img_height))
 
-    def out(self, y, names):
+    def out(self, y, names, frames):
         """
         Generate visual output
         Args:
             y: network result (list of samples)
-            names: filenames for y
+            names: filenames for y, if empty: frames have to be provided
+            frames: source frames, if empty: names have to be provided
         """
+        if not names and not frames:
+            raise Exception('at least frames or names have to be provided')
         # iterate over samples
         for i in range(len(y)):
             lanes = np.array(map_x_to_image(evaluate_predictions(y[i])))  # get x coordinates based on probabilities
 
-            vis = cv2.imread(os.path.join(cfg.data_root, names[i]))
+            if frames:
+                vis = frames[i]
+            else:
+                vis = cv2.imread(os.path.join(cfg.data_root, names[i]))
+
+            if vis is None:
+                raise Exception('failed to load frame')
+
             for i in range(lanes.shape[0]):  # iterate over lanes
                 lane = lanes[i, :]
                 if np.sum(lane != -2) > 2:  # If more than two points found for this lane
@@ -78,5 +89,8 @@ class ImageOut:
             if self.enable_video_export:
                 self.vout.write(vis)
             if self.enable_image_export:
-                out_path = os.path.join(cfg.log_path, f'{get_filename_date_string()}_out', names[i])
+                out_path = os.path.join(
+                    cfg.log_path,
+                    f'{get_filename_date_string()}_out', names[i] if names else int(time.time()*1000000)
+                )  # use current timestamp (nanoseconds) as fallback
                 cv2.imwrite(out_path, vis)

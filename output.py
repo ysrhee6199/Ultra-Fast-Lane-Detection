@@ -19,10 +19,11 @@ import torch
 
 from runtime.input_modules.input_images import input_images
 from model.model import parsingNet
+from runtime.input_modules.input_video import input_video
 from runtime.out_modules.out_json import JsonOut
 from runtime.out_modules.out_prod import ProdOut
 from runtime.out_modules.out_test import TestOut
-from runtime.out_modules.out_video import ImageOut
+from runtime.out_modules.out_video import VisualOut
 from utils.global_config import cfg
 
 
@@ -69,7 +70,8 @@ def setup_input(process_frame):
     if cfg.input_mode == 'images':
         input_images(process_frame, os.path.join(cfg.data_root, cfg.test_txt), cfg.data_root)
     elif cfg.input_mode == 'video':
-        raise NotImplemented
+        input_video(process_frame, '/home/markus/PycharmProjects/datasets/Trainingsdatensatz1/test_vid.mp4',
+                    os.path.join(cfg.data_root, cfg.test_txt))
     elif cfg.input_mode == 'stream':
         raise NotImplemented
     else:
@@ -80,10 +82,13 @@ def setup_input(process_frame):
 def setup_out_method():
     """
     setup the output method
-    Returns: method/function reference to a function taking a list of predictions and a list of corresponding filenames
+    Returns: method/function reference to a function taking
+    - a list of predictions
+    - a list of corresponding filenames (if available)
+    - a list of source_frames (if available)
     """
     if cfg.output_mode == 'video':
-        video_out = ImageOut()
+        video_out = VisualOut()
         return video_out.out, lambda: None
     elif cfg.output_mode == 'test':
         test_out = TestOut()
@@ -109,15 +114,16 @@ class FrameProcessor:
         self.net = net
         self.output_method = output_method
 
-    def process_frame(self, frames, names):
+    def process_frame(self, frames, names=None, source_frames=None):
         """
         process frames and pass result to output_method
         Args:
-            frames: frames to process
-            names: file paths, for output_method
+            frames: frames to process, have to be preprocessed (scaled, as tensor, normalized)
+            names: file paths - provide if possible
+            source_frames: source images (unscaled, eg from camera) - provide if possible
         """
         y = self.net(frames.cuda())  # TODO: maybe use "with torch.no_grad():" to reduce memory usage
-        self.output_method(y, names)
+        self.output_method(y, names, source_frames)
 
 
 if __name__ == "__main__":

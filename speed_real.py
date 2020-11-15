@@ -28,7 +28,7 @@ def test_practical_without_readtime():
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         img2 = Image.fromarray(img)
         x = img_transforms(img2)
-        x = x.unsqueeze(0).cuda()+1
+        x = x.unsqueeze(0).cuda()+1  # +1 increases each value by 1
         y = net(x)
         
     print("pracrical image input size:",img.shape)
