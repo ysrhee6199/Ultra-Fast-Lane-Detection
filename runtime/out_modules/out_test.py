@@ -5,7 +5,7 @@ import numpy as np
 
 from evaluation.tusimple.lane import LaneEval
 from runtime.out_modules.common import map_x_to_image, evaluate_predictions
-from utils.global_config import cfg
+from utils.global_config import cfg, adv_cfg
 
 
 class TestOut:
@@ -113,7 +113,7 @@ class TestOut:
             lanes = map_x_to_image(evaluate_predictions(predictions[i]))
             self.lanes_pred.append({
                 'lanes': lanes,
-                'h_samples': cfg.h_samples,
+                'h_samples': adv_cfg.scaled_h_samples,
                 'raw_file': names[i]
             })
 

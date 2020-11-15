@@ -3,7 +3,7 @@ from itertools import count
 import cv2
 from PIL import Image
 
-from data.constant import default_img_transforms
+from utils.global_config import adv_cfg
 
 
 def input_video(process_frames, input_file, names_file):
@@ -34,6 +34,6 @@ def input_video(process_frames, input_file, names_file):
 
         frame = Image.fromarray(image)
         # unsqueeze: adds one dimension to tensor array (to be similar to loading multiple images)
-        frame = default_img_transforms(frame).unsqueeze(0)
+        frame = adv_cfg.img_transform(frame).unsqueeze(0)
 
         process_frames(frame, [image_paths[i]] if names_file else None, [image])

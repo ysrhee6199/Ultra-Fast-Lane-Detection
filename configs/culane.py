@@ -43,7 +43,10 @@ test_splits = ['list/test_split/'+split for split in ['test0_normal.txt', 'test1
 
 num_lanes = 4
 
-h_samples = [x for x in range(290, 591, 10)]
+# relative height of y coordinates. This is required to support different img_heights
+# to access the correct h_samples for your resolution you can use something like
+# [int(round(x*img_height)) for x in h_samples]
+h_samples = [x/590 for x in range(290, 591, 10)]
 img_height = 590
 img_width = 1640
 

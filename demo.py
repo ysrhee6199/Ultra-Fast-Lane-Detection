@@ -5,9 +5,8 @@ from utils.dist_utils import dist_print
 import torch
 import scipy.special, tqdm
 import numpy as np
-import torchvision.transforms as transforms
 from data.dataset import LaneTestDataset
-from data.constant import gen_row_anchor, default_img_transforms
+from utils.global_config import adv_cfg
 
 if __name__ == "__main__":
     args = global_config.args
@@ -39,12 +38,11 @@ if __name__ == "__main__":
 
     net.eval()
 
-    img_transforms = default_img_transforms
+    img_transforms = adv_cfg.img_transform
     splits = cfg.test_splits
     datasets = [LaneTestDataset(cfg.data_root, os.path.join(cfg.data_root, split), img_transform=img_transforms) for
                 split in splits]
     img_w, img_h = cfg.img_width, cfg.img_height
-    row_anchor = gen_row_anchor()
 
     for split, dataset in zip(splits, datasets):
         loader = torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=False, num_workers=1)
@@ -75,12 +73,7 @@ if __name__ == "__main__":
             loc[out_j == cfg.griding_num] = 0
             out_j = loc
 
-            print(out_j, flush=True)
-            print('-------------')
-            print(out_j2, flush=True)
-
-            print('hi', flush=True)
-            import pdb; pdb.set_trace()
+            # import pdb; pdb.set_trace()
             vis = cv2.imread(os.path.join(cfg.data_root, names[0]))
             for i in range(out_j.shape[1]):
                 if np.sum(out_j[:, i] != 0) > 2:
@@ -88,7 +81,7 @@ if __name__ == "__main__":
                         if out_j[k, i] > 0:
                             ppp = (
                                 int(out_j[k, i] * col_sample_w * img_w / global_config.cfg.train_img_width) - 1,
-                                int(img_h * (row_anchor[cfg.cls_num_per_lane - 1 - k] /
+                                int(img_h * (adv_cfg.train_h_samples[cfg.cls_num_per_lane - 1 - k] /
                                              global_config.cfg.train_img_height)) - 1)
                             cv2.circle(vis, ppp, 5, (0, 255, 0), -1)
             vout.write(vis)

@@ -2,9 +2,9 @@ import torch, os
 
 import torchvision.transforms as transforms
 import data.mytransforms as mytransforms
-from data.constant import gen_row_anchor, default_img_transforms
 from data.dataset import LaneClsDataset, LaneTestDataset
 from utils import global_config
+from utils.global_config import adv_cfg
 
 
 def get_train_loader(batch_size, data_root, griding_num, use_aux, distributed, num_lanes, train_gt):
@@ -16,7 +16,7 @@ def get_train_loader(batch_size, data_root, griding_num, use_aux, distributed, n
         mytransforms.FreeScaleMask((int(global_config.cfg.train_img_height / 8), int(global_config.cfg.train_img_width / 8))),
         mytransforms.MaskToTensor(),
     ])
-    img_transform = default_img_transforms
+    img_transform = adv_cfg.img_transform
     simu_transform = mytransforms.Compose2([
         mytransforms.RandomRotate(6),
         mytransforms.RandomUDoffsetLABEL(100),
@@ -27,7 +27,7 @@ def get_train_loader(batch_size, data_root, griding_num, use_aux, distributed, n
                                    img_transform=img_transform, target_transform=target_transform,
                                    simu_transform=simu_transform,
                                    segment_transform=segment_transform,
-                                   row_anchor=gen_row_anchor(),
+                                   row_anchor=global_config.adv_cfg.train_h_samples,
                                    # row_anchor=culane_row_anchor,
                                    griding_num=griding_num, use_aux=use_aux, num_lanes=num_lanes)
 
@@ -41,7 +41,7 @@ def get_train_loader(batch_size, data_root, griding_num, use_aux, distributed, n
     return train_loader
 
 def get_test_loader(batch_size, data_root, distributed, test_txt):
-    img_transforms = default_img_transforms
+    img_transforms = adv_cfg.img_transform
     test_dataset = LaneTestDataset(data_root, os.path.join(data_root, test_txt if test_txt else 'test.txt'), img_transform=img_transforms)
 
     if distributed:

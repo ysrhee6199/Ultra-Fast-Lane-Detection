@@ -4,15 +4,14 @@ import torch
 import time
 import numpy as np
 
-from data.constant import default_img_transforms
 from model.model import parsingNet
 import cv2
 from PIL import Image
 
 from utils import global_config
-from utils.global_config import cfg
+from utils.global_config import cfg, adv_cfg
 
-img_transforms = default_img_transforms
+img_transforms = adv_cfg.img_transform
 
 def resize(x, y):
     global cap

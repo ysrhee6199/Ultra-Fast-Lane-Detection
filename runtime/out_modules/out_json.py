@@ -1,10 +1,8 @@
 import json
 import os
 
-import numpy as np
-
 from runtime.out_modules.common import get_filename_date_string, map_x_to_image, evaluate_predictions
-from utils.global_config import cfg
+from utils.global_config import cfg, adv_cfg
 
 
 class JsonOut:
@@ -43,7 +41,7 @@ class JsonOut:
 
             json_string = json.dumps({
                 'lanes': lanes,
-                'h_samples': cfg.h_samples,
+                'h_samples': adv_cfg.scaled_h_samples,
                 'raw_file': names[i]
             })
 

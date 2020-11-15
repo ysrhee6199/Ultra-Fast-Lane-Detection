@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 
 from runtime.out_modules.common import get_filename_date_string, map_x_to_image, evaluate_predictions
-from utils.global_config import cfg
+from utils.global_config import cfg, adv_cfg
 
 
 def get_lane_color(i):
@@ -76,11 +76,11 @@ class VisualOut:
                     color = get_lane_color(i)
                     for j in range(lanes.shape[1]):
                         img_x = lane[j]
-                        img_y = cfg.h_samples[j]
+                        img_y = adv_cfg.scaled_h_samples[j]
                         if img_x != -2:
                             if self.enable_line_mode:
                                 if j > 0:
-                                    cv2.line(vis, (lane[j - 1], cfg.h_samples[j - 1]), (img_x, img_y), color, 5)
+                                    cv2.line(vis, (lane[j - 1], adv_cfg.scaled_h_samples[j - 1]), (img_x, img_y), color, 5)
                             else:
                                 cv2.circle(vis, (img_x, img_y), 5, color, -1)
             if self.enable_live_video:

@@ -5,7 +5,7 @@ import numpy as np
 from PIL import Image
 from mss import mss
 
-from data.constant import default_img_transforms
+from utils.global_config import adv_cfg
 
 
 def input_screencap(process_frames):
@@ -31,7 +31,7 @@ def input_screencap(process_frames):
         image = Image.frombytes("RGB", (screenshot.width, screenshot.height), screenshot.rgb)
 
         # unsqueeze: adds one dimension to tensor array (to be similar to loading multiple images)
-        frame = default_img_transforms(image).unsqueeze(0)
+        frame = adv_cfg.img_transform(image).unsqueeze(0)
 
         image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
         process_frames(frame, None, [image])
