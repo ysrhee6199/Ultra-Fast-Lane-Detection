@@ -14,8 +14,10 @@
 # The main goal is to provide a good understandable and expandable / adaptable code base.
 
 import os
+import time
 
 import torch
+from tqdm import tqdm
 
 from runtime.input_modules.input_images import input_images
 from model.model import parsingNet
@@ -116,6 +118,9 @@ class FrameProcessor:
     def __init__(self, net, output_method):
         self.net = net
         self.output_method = output_method
+        self.measure_time = False  # TODO: move to cfg
+        if self.measure_time:
+            self.timestamp = time.time()
 
     def process_frame(self, frames, names=None, source_frames=None):
         """
@@ -125,8 +130,16 @@ class FrameProcessor:
             names: file paths - provide if possible
             source_frames: source images (unscaled, eg from camera) - provide if possible
         """
+        if self.measure_time: time1 = time.time()
         y = self.net(frames.cuda())  # TODO: maybe use "with torch.no_grad():" to reduce memory usage
+        if self.measure_time: time2 = time.time()
         self.output_method(y, names, source_frames)
+        if self.measure_time:
+            real_time = (time.time() - self.timestamp) / len(y)
+            synthetic_time = (time2 - time1) / len(y)
+            real_time_wo_out = (time2 - self.timestamp)
+            print(f'fps real: {round(1/real_time)}, real wo out: {round(1/real_time_wo_out)}, synthetic: {round(1/synthetic_time)}, frametime real: {real_time}, real wo out: {real_time_wo_out}, synthetic: {synthetic_time}',  flush=True)
+            self.timestamp = time.time()
 
 
 if __name__ == "__main__":
