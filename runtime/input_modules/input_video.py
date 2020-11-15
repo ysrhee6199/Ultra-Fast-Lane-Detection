@@ -3,23 +3,18 @@ from itertools import count
 import cv2
 from PIL import Image
 
-from utils.global_config import adv_cfg
+from utils.global_config import adv_cfg, cfg
 
 
-def input_video(process_frames, input_file, names_file):
+def input_video(process_frames, input_file, names_file=None):
     """
-    read a video file
+    read a video file or camera stream
     batch size is always 1
     Args:
         process_frames: function taking a list of preprocessed frames, file paths and source frames
-        input_file: video file
+        input_file: video file (path; string) or camera index (integer)
         names_file: list with file paths to the frames of the video
-
-    Returns:
-
     """
-    if not input_file:
-        raise Exception('input file required')
     if not names_file:
         print('no names_file specified, some functions (output modules) might not work as they require names!')
     else:
@@ -27,10 +22,28 @@ def input_video(process_frames, input_file, names_file):
             image_paths = file.read().splitlines()
 
     vid = cv2.VideoCapture(input_file)
+    resize = False
+
+    # scale / resize
+    if isinstance(input_file, int):  # input is camera
+        vid.set(cv2.CAP_PROP_FRAME_WIDTH, cfg.img_width)
+        vid.set(cv2.CAP_PROP_FRAME_HEIGHT, cfg.img_height)
+        print(
+            f'input is a camera. make sure your camera is capable of your selected resolution {cfg.img_width}x{cfg.img_height}; You are probably ok if you are not getting a message that your frames will be resized')
 
     for i in count():
         success, image = vid.read()
-        if not success: break
+        if not success:
+            break
+
+        if i == 0:
+            if image.shape[0] != cfg.img_height or image.shape[1] != cfg.img_width:
+                resize = True
+                print(
+                    'your video file does not match the specified image size -> resizing frames, will impact performance.')
+
+        if resize:
+            image = cv2.resize(image, (cfg.img_width, cfg.img_height))
 
         frame = Image.fromarray(image)
         # unsqueeze: adds one dimension to tensor array (to be similar to loading multiple images)

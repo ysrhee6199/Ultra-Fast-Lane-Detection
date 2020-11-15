@@ -75,10 +75,10 @@ def setup_input(process_frame):
     elif cfg.input_mode == 'video':
         input_video(process_frame, '/home/markus/PycharmProjects/datasets/Trainingsdatensatz1/test_vid.mp4',
                     os.path.join(cfg.data_root, cfg.test_txt))
-    elif cfg.input_mode == 'stream':
-        raise NotImplemented
+    elif cfg.input_mode == 'camera':
+        input_video(process_frame, 0)
     elif cfg.input_mode == 'screencap':
-        input_screencap(process_frame)
+        input_screencap(process_frame, {'top': 0, 'left': 3440, 'width': 1920, 'height': 1080})
     else:
         print(cfg.input_mode)
         raise NotImplemented('unknown/unsupported input_mode')

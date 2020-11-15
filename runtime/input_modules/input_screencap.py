@@ -8,7 +8,7 @@ from mss import mss
 from utils.global_config import adv_cfg
 
 
-def input_screencap(process_frames):
+def input_screencap(process_frames, mon):
     """
     record from screen
     batch size is always 1
@@ -21,9 +21,9 @@ def input_screencap(process_frames):
 
     Args:
         process_frames: function taking a list of preprocessed frames, file paths and source frames
+        mon: position and size of recording window, eg {'top': 0, 'left': 3440, 'width': 1920, 'height': 1080}
     """
 
-    mon = {'top': 0, 'left': 3440, 'width': 1920, 'height': 1080}
     sct = mss()
 
     for i in count():
