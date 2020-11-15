@@ -19,6 +19,7 @@ import torch
 
 from runtime.input_modules.input_images import input_images
 from model.model import parsingNet
+from runtime.input_modules.input_screencap import input_screencap
 from runtime.input_modules.input_video import input_video
 from runtime.out_modules.out_json import JsonOut
 from runtime.out_modules.out_prod import ProdOut
@@ -74,6 +75,8 @@ def setup_input(process_frame):
                     os.path.join(cfg.data_root, cfg.test_txt))
     elif cfg.input_mode == 'stream':
         raise NotImplemented
+    elif cfg.input_mode == 'screencap':
+        input_screencap(process_frame)
     else:
         print(cfg.input_mode)
         raise NotImplemented('unknown/unsupported input_mode')

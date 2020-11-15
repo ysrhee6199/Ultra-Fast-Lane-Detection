@@ -7,8 +7,6 @@ from PIL import Image
 # loader class for images
 # list_path: path to text-file containing relative image paths
 # data_root: root directory for image paths
-
-
 class LaneDataset(torch.utils.data.Dataset):
     def __init__(self, data_root, list_path, img_transform):
         super(LaneDataset, self).__init__()

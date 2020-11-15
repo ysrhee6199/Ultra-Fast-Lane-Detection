@@ -76,7 +76,8 @@ def merge_config():
              'weight_decay', 'momentum', 'scheduler', 'steps', 'gamma', 'warmup', 'warmup_iters',
              'use_aux', 'griding_num', 'backbone', 'sim_loss_w', 'shp_loss_w', 'note', 'log_path',
              'finetune', 'resume', 'test_model', 'test_work_dir', 'num_lanes', 'train_gt', 'cls_num_per_lane',
-             'test_txt', 'output_mode', 'input_mode', 'test_validation_data']
+             'test_txt', 'output_mode', 'input_mode', 'test_validation_data', 'img_height', 'img_width',
+             'train_img_height', 'train_img_width']
     # following cfgs cant be set via cli: 'h_samples', 'test_splits'
 
     for item in items:
@@ -100,7 +101,7 @@ def save_model(net, optimizer, epoch, save_path, distributed):
 
             # delete old epochs
             if epoch > 0:
-                prev_model_path = os.path.join(save_path, 'ep%03d.pth' % (int(epoch)-safe_distance))
+                prev_model_path = os.path.join(save_path, 'ep%03d.pth' % (int(epoch) - safe_distance))
                 if os.path.exists(prev_model_path):
                     os.remove(prev_model_path)
 
