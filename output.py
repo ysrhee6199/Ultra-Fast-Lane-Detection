@@ -118,9 +118,10 @@ class FrameProcessor:
     def __init__(self, net, output_method):
         self.net = net
         self.output_method = output_method
-        self.measure_time = False  # TODO: move to cfg
+        self.measure_time = True  # TODO: move to cfg
         if self.measure_time:
             self.timestamp = time.time()
+            self.avg_fps=[]
 
     def process_frame(self, frames, names=None, source_frames=None):
         """
@@ -139,7 +140,13 @@ class FrameProcessor:
             synthetic_time = (time2 - time1) / len(y)
             real_time_wo_out = (time2 - self.timestamp)
             print(f'fps real: {round(1/real_time)}, real wo out: {round(1/real_time_wo_out)}, synthetic: {round(1/synthetic_time)}, frametime real: {real_time}, real wo out: {real_time_wo_out}, synthetic: {synthetic_time}',  flush=True)
+            self.avg_fps.append((real_time, real_time_wo_out, synthetic_time))
             self.timestamp = time.time()
+
+    def __del__(self):
+        if self.measure_time:
+            print([round(1/(sum(y)/len(y))) for y in zip(*self.avg_fps)])
+
 
 
 if __name__ == "__main__":
