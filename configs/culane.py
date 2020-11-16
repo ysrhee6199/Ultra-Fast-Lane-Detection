@@ -1,6 +1,6 @@
 # DATA
 dataset = 'CULane'
-data_root = None
+data_root = '/home/markus/master_project/culaneroot/'
 
 # TRAIN
 train_gt = 'list/train_gt.txt'
@@ -29,7 +29,7 @@ shp_loss_w = 0.0
 # EXP
 note = ''
 
-log_path = None
+log_path = '/home/markus/PycharmProjects/log/culane/'
 
 # FINETUNE or RESUME MODEL PATH
 finetune = None
@@ -49,5 +49,3 @@ num_lanes = 4
 h_samples = [x/590 for x in range(290, 591, 10)]
 img_height = 590
 img_width = 1640
-
-cls_num_per_lane = len(h_samples)   # number of h_samples; not determining automatically because only available during training (test). TODO: should be determined automatically and stored together with model

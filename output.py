@@ -15,9 +15,10 @@
 
 import os
 import time
+from typing import Sequence, List
 
 import torch
-from tqdm import tqdm
+from numpy import ndarray
 
 from runtime.input_modules.input_images import input_images
 from model.model import parsingNet
@@ -27,7 +28,7 @@ from runtime.out_modules.out_json import JsonOut
 from runtime.out_modules.out_prod import ProdOut
 from runtime.out_modules.out_test import TestOut
 from runtime.out_modules.out_video import VisualOut
-from utils.global_config import cfg
+from utils.global_config import cfg, adv_cfg
 
 
 def setup_net():
@@ -43,7 +44,7 @@ def setup_net():
     net = parsingNet(
         pretrained=False,
         backbone=cfg.backbone,
-        cls_dim=(cfg.griding_num + 1, cfg.cls_num_per_lane, cfg.num_lanes),
+        cls_dim=(cfg.griding_num + 1, adv_cfg.cls_num_per_lane, cfg.num_lanes),
         use_aux=False
     ).cuda()
     # It should be noted that our method only uses the auxiliary segmentation task in the training phase, and it would
@@ -121,9 +122,9 @@ class FrameProcessor:
         self.measure_time = True  # TODO: move to cfg
         if self.measure_time:
             self.timestamp = time.time()
-            self.avg_fps=[]
+            self.avg_fps = []
 
-    def process_frame(self, frames, names=None, source_frames=None):
+    def process_frames(self, frames: torch.Tensor, names: List[str] = None, source_frames: List[ndarray] = None):
         """
         process frames and pass result to output_method
         Args:
@@ -132,26 +133,29 @@ class FrameProcessor:
             source_frames: source images (unscaled, eg from camera) - provide if possible
         """
         if self.measure_time: time1 = time.time()
-        y = self.net(frames.cuda())  # TODO: maybe use "with torch.no_grad():" to reduce memory usage
+        with torch.no_grad():
+            y = self.net(frames.cuda())  # TODO: maybe use "with torch.no_grad():" to reduce memory usage
         if self.measure_time: time2 = time.time()
         self.output_method(y, names, source_frames)
+
         if self.measure_time:
             real_time = (time.time() - self.timestamp) / len(y)
             synthetic_time = (time2 - time1) / len(y)
-            real_time_wo_out = (time2 - self.timestamp)
-            print(f'fps real: {round(1/real_time)}, real wo out: {round(1/real_time_wo_out)}, synthetic: {round(1/synthetic_time)}, frametime real: {real_time}, real wo out: {real_time_wo_out}, synthetic: {synthetic_time}',  flush=True)
+            real_time_wo_out = (time2 - self.timestamp) / len(y)
+            print(
+                f'fps real: {round(1 / real_time)}, real wo out: {round(1 / real_time_wo_out)}, synthetic: {round(1 / synthetic_time)}, frametime real: {real_time}, real wo out: {real_time_wo_out}, synthetic: {synthetic_time}',
+                flush=True)
             self.avg_fps.append((real_time, real_time_wo_out, synthetic_time))
             self.timestamp = time.time()
 
     def __del__(self):
         if self.measure_time:
-            print([round(1/(sum(y)/len(y))) for y in zip(*self.avg_fps)])
-
+            print([round(1 / (sum(y) / len(y))) for y in zip(*self.avg_fps)])
 
 
 if __name__ == "__main__":
     out_method, post_method = setup_out_method()
     net = setup_net()
     frame_processor = FrameProcessor(net, out_method)
-    setup_input(frame_processor.process_frame)
+    setup_input(frame_processor.process_frames)
     post_method()  # called when input method is finished (post processing)

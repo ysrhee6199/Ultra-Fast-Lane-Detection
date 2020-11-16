@@ -1,12 +1,19 @@
 from itertools import count
 
 import cv2
+import torch
 from PIL import Image
+from numpy import ndarray
 
 from utils.global_config import adv_cfg, cfg
 
+import typing
 
-def input_video(process_frames, input_file, names_file=None):
+
+def input_video(process_frames: typing.Callable[[torch.Tensor, typing.List[str], typing.List[ndarray]], str],
+                input_file: typing.Union[str, int],
+                names_file: str = None
+                ):
     """
     read a video file or camera stream
     batch size is always 1

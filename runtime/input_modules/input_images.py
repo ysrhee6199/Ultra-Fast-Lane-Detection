@@ -25,4 +25,5 @@ def input_images(process_frames, input_file=os.path.join(cfg.data_root, cfg.test
     for i, data in enumerate(tqdm(loader)):
         # for data in loader:
         imgs, names = data
+
         process_frames(imgs, names)

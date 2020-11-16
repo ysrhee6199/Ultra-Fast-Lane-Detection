@@ -51,7 +51,6 @@ h_samples = [x/720 for x in range(380, 711, 10)]
 img_height = 720
 img_width = 1280
 
-cls_num_per_lane = len(h_samples)
 
 
 # untested, changing these values might not work as expected. If changed use a multiple of 8

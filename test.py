@@ -5,6 +5,8 @@ from utils.dist_utils import dist_print
 from evaluation.eval_wrapper import eval_lane
 import torch
 
+from utils.global_config import adv_cfg
+
 if __name__ == "__main__":
     args = global_config.args
     cfg = global_config.cfg
@@ -23,7 +25,7 @@ if __name__ == "__main__":
     net = parsingNet(
         pretrained=False,
         backbone=cfg.backbone,
-        cls_dim=(cfg.griding_num + 1, cfg.cls_num_per_lane, cfg.num_lanes),
+        cls_dim=(cfg.griding_num + 1, adv_cfg.cls_num_per_lane, cfg.num_lanes),
         use_aux=False
     ).cuda()  # we dont need auxiliary segmentation in testing
 

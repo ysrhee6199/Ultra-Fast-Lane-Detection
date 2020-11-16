@@ -51,7 +51,6 @@ h_samples = [x/720 for x in range(160, 711, 10)]
 img_height = 720
 img_width = 1280
 
-cls_num_per_lane = len(h_samples)   # number of h_samples; not determining automatically because only available during training (test). TODO: should be determined automatically and stored together with model
 
 
 

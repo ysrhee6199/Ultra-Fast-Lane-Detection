@@ -18,7 +18,7 @@ class JsonOut:
             self,
             filepath=os.path.join(
                 cfg.log_path,
-                f'{get_filename_date_string()}_{cfg.dataset}_{os.path.splitext(cfg.test_txt)[0]}.json'
+                f'{get_filename_date_string()}_{cfg.dataset}_{os.path.splitext(os.path.basename(cfg.test_txt)[-1])[0]}.json'
             )
     ):
         """

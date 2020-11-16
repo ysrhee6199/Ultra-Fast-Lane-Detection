@@ -19,7 +19,7 @@ if __name__ == "__main__":
     net = parsingNet(
         pretrained=False,
         backbone=cfg.backbone,
-        cls_dim=(cfg.griding_num + 1, cfg.cls_num_per_lane, cfg.num_lanes),
+        cls_dim=(cfg.griding_num + 1, adv_cfg.cls_num_per_lane, cfg.num_lanes),
         use_aux=False
     ).cuda()  # we dont need auxiliary segmentation in testing
 
@@ -81,7 +81,7 @@ if __name__ == "__main__":
                         if out_j[k, i] > 0:
                             ppp = (
                                 int(out_j[k, i] * col_sample_w * img_w / global_config.cfg.train_img_width) - 1,
-                                int(img_h * (adv_cfg.train_h_samples[cfg.cls_num_per_lane - 1 - k] /
+                                int(img_h * (adv_cfg.train_h_samples[adv_cfg.cls_num_per_lane - 1 - k] /
                                              global_config.cfg.train_img_height)) - 1)
                             cv2.circle(vis, ppp, 5, (0, 255, 0), -1)
             vout.write(vis)

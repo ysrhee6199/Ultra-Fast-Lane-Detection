@@ -7,6 +7,7 @@ from data.dataloader import get_train_loader
 
 from utils.dist_utils import dist_print, dist_tqdm
 from utils.factory import get_metric_dict, get_loss_dict, get_optimizer, get_scheduler
+from utils.global_config import adv_cfg
 from utils.metrics import update_metrics, reset_metrics
 
 from utils.common import save_model, cp_projects
@@ -111,7 +112,7 @@ if __name__ == "__main__":
 
     train_loader = get_train_loader(cfg.batch_size, cfg.data_root, cfg.griding_num, cfg.use_aux, distributed,
                                     cfg.num_lanes, cfg.train_gt)
-    cls_num_per_lane = cfg.cls_num_per_lane
+    cls_num_per_lane = adv_cfg.cls_num_per_lane
 
     net = parsingNet(pretrained=True, backbone=cfg.backbone,
                      cls_dim=(cfg.griding_num + 1, cls_num_per_lane, cfg.num_lanes), use_aux=cfg.use_aux).cuda()
