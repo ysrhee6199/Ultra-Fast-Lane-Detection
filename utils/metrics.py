@@ -9,7 +9,6 @@ def converter(data):
 
 
 def fast_hist(label_pred, label_true, num_classes):
-    # pdb.set_trace()
     hist = np.bincount(num_classes * label_true.astype(int) + label_pred, minlength=num_classes ** 2)
     hist = hist.reshape(num_classes, num_classes)
     return hist
