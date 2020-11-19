@@ -3,6 +3,7 @@ from utils.dist_utils import is_main_process, dist_print, DistSummaryWriter
 from utils.config import Config
 import datetime, os
 import torch
+import pathspec
 
 
 def str2bool(v):
@@ -17,90 +18,84 @@ def str2bool(v):
 
 
 def get_args():
-    parser = argparse.ArgumentParser()
-    parser.description = 'Most config values can be overwritten with its corresponding cli parameters. For further details on the config options see configs/default.py and the documentation'
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, argument_default=None)
+    parser.description = """Most config values can be overwritten with its corresponding cli parameters. For further details on the config options see configs/default.py and the documentation.
+unavailable options on cli:
+- h_samples
+"""
 
+    # @formatter:off
+    # define config groups, only relevant for --help
+    basics = parser.add_argument_group('basic switches, these are always needed')
     train_args = parser.add_argument_group('training', 'these switches are only used for training')
     runtime_args = parser.add_argument_group('runtime', 'these switches are only used in the runtime module')
-    in_modules = parser.add_argument_group('input modules',
-                                           'with these options you can configure the input modules. Each module may have its own config switches')
-    out_modules = parser.add_argument_group('output modules',
-                                            'with these options you can configure the output modules. Each module may have its own config switches')
+    in_modules = parser.add_argument_group('input modules', 'with these options you can configure the input modules. Each module may have its own config switches')
+    out_modules = parser.add_argument_group('output modules', 'with these options you can configure the output modules. Each module may have its own config switches')
 
-    parser.add_argument('config', help='path to config file')
+    # define switches
+    basics.add_argument('config', help='path to config file')
+    basics.add_argument('--dataset', metavar='', type=str, help='dataset name, can be any string')
+    basics.add_argument('--data_root', metavar='', type=str, help='root directory of your dataset')
+    basics.add_argument('--batch_size', metavar='', type=int, help='size of samples dataloader will load for each batch')
+    basics.add_argument('--backbone', metavar='', type=str, help="define which resnet backbone to use, allowed values: ['18', '34', '50', '101', '152', '50next', '101next', '50wide', '101wide']")
+    basics.add_argument('--griding_num', metavar='', type=int, help='x resolution of nn, just like h_samples are the y resolution')
+    basics.add_argument('--note', metavar='', type=str, help='suffix for working directory (probably good to give them a rememberable name')
+    basics.add_argument('--log_path', metavar='', type=str, help='working directory: every output will be written here')
+    basics.add_argument('--use_aux', metavar='', type=str2bool, help='used to improve training, should be disabled during runtime (independent of this config)')
+    basics.add_argument('--num_lanes', metavar='', type=int, help='number of lanes')
+    basics.add_argument('--img_height', metavar='', type=int, help='height of input images')
+    basics.add_argument('--img_width', metavar='', type=int, help='width of input images')
+    basics.add_argument('--train_img_height', metavar='', type=int, help='height of image which will be passed to nn; !this option is untested and might not work!')
+    basics.add_argument('--train_img_width', metavar='', type=int, help='width of image which will be passed to nn; !this option is untested and might not work!')
 
-    parser.add_argument('--dataset', default=None, type=str, help='dataset name, can be any string')
-    parser.add_argument('--data_root', default=None, type=str, help='root directory of your dataset')
-    parser.add_argument('--batch_size', default=None, type=int,
-                        help='size of samples dataloader will load for each batch')
-    parser.add_argument('--backbone', default=None, type=str,
-                        help="define which resnet backbone to use, allowed values: ['18', '34', '50', '101', '152', '50next', '101next', '50wide', '101wide']")
-    parser.add_argument('--griding_num', default=None, type=int,
-                        help='x resolution of nn, just like h_samples are the y resolution')
-    parser.add_argument('--note', default=None, type=str,
-                        help='suffix for working directory (probably good to give them a rememberable name')
-    parser.add_argument('--log_path', default=None, type=str,
-                        help='working directory: every output will be written here')
-    parser.add_argument('--use_aux', default=None, type=str2bool,
-                        help='used to improve training, should be disabled during runtime (independent of this config)')
-    parser.add_argument('--num_lanes', default=None, type=int, help='number of lanes')
-    parser.add_argument('--img_height', default=None, type=int, help='height of input images')
-    parser.add_argument('--img_width', default=None, type=int, help='width of input images')
-    parser.add_argument('--train_img_height', default=None, type=int,
-                        help='height of image which will be passed to nn; !this option is untested and might not work!')
-    parser.add_argument('--train_img_width', default=None, type=int,
-                        help='width of image which will be passed to nn; !this option is untested and might not work!')
-    train_args.add_argument('--local_rank', type=int, default=0)
-    train_args.add_argument('--epoch', default=None, type=int, help='number of epochs to train')
-    train_args.add_argument('--optimizer', default=None, type=str)
-    train_args.add_argument('--learning_rate', default=None, type=float)
-    train_args.add_argument('--weight_decay', default=None, type=float)
-    train_args.add_argument('--momentum', default=None, type=float)
-    train_args.add_argument('--scheduler', default=None, type=str)
-    train_args.add_argument('--steps', default=None, type=int, nargs='+')
-    train_args.add_argument('--gamma', default=None, type=float)
-    train_args.add_argument('--warmup', default=None, type=str)
-    train_args.add_argument('--warmup_iters', default=None, type=int)
-    train_args.add_argument('--sim_loss_w', default=None, type=float)
-    train_args.add_argument('--shp_loss_w', default=None, type=float)
-    train_args.add_argument('--finetune', default=None, type=str)
-    train_args.add_argument('--resume', default=None, type=str,
-                            help='path of existing model; continue training this model')
-    train_args.add_argument('--train_gt', default=None, type=str, help='training index file (train_gt.txt)')
-    runtime_args.add_argument('--test_model', default=None, type=str,
-                              help='load trained model and use it for evaluation')
-    runtime_args.add_argument('--output_mode', default=None, type=str,
-                              help='only applicable for output.py, specifies output module')
-    runtime_args.add_argument('--input_mode', default=None, type=str,
-                              help='only applicable for output.py, specifies input module')
-    out_modules.add_argument('--test_txt', default=None, type=str, help='testing index file (test.txt)')
-    out_modules.add_argument('--test_validation_data', default=None, type=str,
-                             help='file containing labels for test data to validate test results')
+    train_args.add_argument('--local_rank', metavar='', type=int, default=0)
+    train_args.add_argument('--epoch', metavar='', type=int, help='number of epochs to train')
+    train_args.add_argument('--optimizer', metavar='', type=str)
+    train_args.add_argument('--learning_rate', metavar='', type=float)
+    train_args.add_argument('--weight_decay', metavar='', type=float)
+    train_args.add_argument('--momentum', metavar='', type=float)
+    train_args.add_argument('--scheduler', metavar='', type=str)
+    train_args.add_argument('--steps', metavar='', type=int, nargs='+')
+    train_args.add_argument('--gamma', metavar='', type=float)
+    train_args.add_argument('--warmup', metavar='', type=str)
+    train_args.add_argument('--warmup_iters', metavar='', type=int)
+    train_args.add_argument('--sim_loss_w', metavar='', type=float)
+    train_args.add_argument('--shp_loss_w', metavar='', type=float)
+    train_args.add_argument('--finetune', metavar='', type=str)
+    train_args.add_argument('--resume', metavar='', type=str, help='path of existing model; continue training this model')
+    train_args.add_argument('--train_gt', metavar='', type=str, help='training index file (train_gt.txt)')
+
+    runtime_args.add_argument('--test_model', metavar='', type=str, help='load trained model and use it for evaluation')
+    runtime_args.add_argument('--output_mode', metavar='', type=str, help='only applicable for output.py, specifies output module')
+    runtime_args.add_argument('--input_mode', metavar='', type=str, help='only applicable for output.py, specifies input module')
+    runtime_args.add_argument('--measure_time', metavar='', type=str2bool, help='enable speed measurement')
+
+    in_modules.add_argument('--video_input_file', metavar='', type=str, help='full filepath to video file you want to use as input')
+    in_modules.add_argument('--camera_input_cam_number', metavar='', type=int, help='number of your camera')
+    in_modules.add_argument('--screencap_recording_area', metavar='', type=int, nargs='+', help='position and size of recording area: x,y,w,h')
+
+    out_modules.add_argument('--test_txt', metavar='', type=str, help='testing index file (test.txt)')
+    out_modules.add_argument('--test_validation_data', metavar='', type=str, help='file containing labels for test data to validate test results')
+    # @formatter:on
     return parser
 
 
-def merge_config():
+def merge_config() -> Config:
+    """ combines default and user-config and cli arguments
+    """
     args = get_args().parse_args()
-    import pdb;pdb.set_trace()
     user_cfg = Config.fromfile(args.config)
     cfg = Config.fromfile('configs/default.py')
 
+    # override default cfg with values from user cfg
     for item in [(k, v) for k, v in user_cfg.items() if v]:
         cfg[item[0]] = item[1]
 
-    items = ['dataset', 'data_root', 'epoch', 'batch_size', 'optimizer', 'learning_rate',
-             'weight_decay', 'momentum', 'scheduler', 'steps', 'gamma', 'warmup', 'warmup_iters',
-             'use_aux', 'griding_num', 'backbone', 'sim_loss_w', 'shp_loss_w', 'note', 'log_path',
-             'finetune', 'resume', 'test_model', 'test_work_dir', 'num_lanes', 'train_gt',
-             'test_txt', 'output_mode', 'input_mode', 'test_validation_data', 'img_height', 'img_width',
-             'train_img_height', 'train_img_width']
-    # following cfgs cant be set via cli: 'h_samples'
-
-    for item in items:
-        if getattr(args, item) is not None:
-            dist_print('merge ', item, ' config')
-            setattr(cfg, item, getattr(args, item))
-    return args, cfg
+    for k,v in vars(args).items():
+        if v:
+            dist_print('merge ', (k,v), ' config')
+            setattr(cfg, k, v)
+    return cfg
 
 
 def save_model(net, optimizer, epoch, save_path, distributed):
@@ -111,9 +106,6 @@ def save_model(net, optimizer, epoch, save_path, distributed):
         assert os.path.exists(save_path)
         model_path = os.path.join(save_path, 'ep%03d.pth' % epoch)
         torch.save(state, model_path)
-
-
-import pathspec
 
 
 # TODO: copying files with spaces in their path seems to fail

@@ -39,7 +39,7 @@ resume = None
 test_model = None
 test_work_dir = None
 test_txt = 'list/test.txt'  # default: test.txt
-test_splits = ['list/test_split/'+split for split in ['test0_normal.txt', 'test1_crowd.txt', 'test2_hlight.txt', 'test3_shadow.txt', 'test4_noline.txt', 'test5_arrow.txt', 'test6_curve.txt', 'test7_cross.txt', 'test8_night.txt']]  # for demo.py
+# test_splits = ['list/test_split/'+split for split in ['test0_normal.txt', 'test1_crowd.txt', 'test2_hlight.txt', 'test3_shadow.txt', 'test4_noline.txt', 'test5_arrow.txt', 'test6_curve.txt', 'test7_cross.txt', 'test8_night.txt']]  # for demo.py
 
 num_lanes = 4
 

@@ -1,9 +1,15 @@
+from typing import List
+
+import numpy as np
+import torch
+
+
 class ProdOut:
     """
     You can use this class as a starting point to implement your "real use case"
     """
 
-    def out(self, y, names):
+    def out(self, predictions: torch.Tensor, names: List[str], frames: List[np.ndarray]):
         """
         This is the place where you implement your out-logic.
         notice that you'll receive a list of predictions and filenames. The list list size equals your batch size.
@@ -15,15 +21,15 @@ class ProdOut:
         Eg for image export this would be image coordinates
 
         Args:
-            y: network result (list of samples)
-            names: filenames for y
+            predictions: network result (list of samples containing probabilities per sample)
+            names: filenames for predictions, might not be available depending on input module
+            frames: source frames, might not be available depending on input module
         """
-        for i in range(0, len(y)):
-            print(y[i])
+        for i in range(0, len(predictions)):
+            print(predictions[i])
 
     def post(self):
         """
-        Called after dataset/video/whatever was completely processed. You can do things like cleanup or printing
-        stats here
+        Called after dataset/video/whatever was completely processed. You can do things like cleanup or printing stats here
         """
         print("finished")

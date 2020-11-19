@@ -2,13 +2,14 @@ from itertools import count
 
 import cv2
 import numpy as np
+import typing
 from PIL import Image
 from mss import mss
 
 from utils.global_config import adv_cfg
 
 
-def input_screencap(process_frames, mon):
+def input_screencap(process_frames: typing.Callable, mon: dict) -> None:
     """
     record from screen
     batch size is always 1

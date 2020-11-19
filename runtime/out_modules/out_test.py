@@ -13,8 +13,8 @@ from utils.global_config import cfg, adv_cfg
 class TestOut:
     @staticmethod
     def bench(pred, gt, y_samples):
-        """
-        bench one sample
+        """ bench one sample
+
         Args:
             pred: predicted lanes
             gt: validation lanes
@@ -66,8 +66,8 @@ class TestOut:
 
     @staticmethod
     def bench_one_submit(json_pred, json_gt):
-        """
-        Do bench for a list of json-results by calling bench() for every sample
+        """ Do bench for a list of json-results by calling bench() for every sample
+
         Args:
             json_pred: predicted list
             json_gt: compare list
@@ -101,15 +101,24 @@ class TestOut:
             {'name': 'FN', 'value': fn / num, 'order': 'asc'}
         ])
 
-    def __init__(self, out_file=cfg.test_validation_data):
+    def __init__(self, out_file: str = cfg.test_validation_data):
         """
+        used non-basic-cfg values: cfg.test_validation_data
+
         Args:
             out_file: relative path to cfg.data_root
         """
         self.compare_file = os.path.join(cfg.data_root, out_file)
         self.lanes_pred = []
 
-    def out(self, predictions: torch.Tensor, names: List[str], frames: List[np.ndarray]):
+    def out(self, predictions: torch.Tensor, names: List[str], _):
+        """ collect results of batch
+
+        Args:
+            predictions: network result (list of samples containing probabilities per sample)
+            names: filenames for predictions, if empty
+
+        """
         for i in range(len(predictions)):
             # get x coordinates based on probabilities
             lanes = map_x_to_image(evaluate_predictions(predictions[i]))
@@ -120,6 +129,9 @@ class TestOut:
             })
 
     def post(self):
+        """
+        Evaluate collected data and print accuracy
+        """
         try:
             lanes_comp = [json.loads(line) for line in open(self.compare_file, 'r').readlines()]
         except:
@@ -133,7 +145,3 @@ class TestOut:
         res = json.loads(res)
         for r in res:
             print(r['name'], r['value'])
-
-        # test_work_dir = os.path.join(cfg.log_path, 'test_work_dir')
-        # if not os.path.exists(test_work_dir):
-        #     os.mkdir(test_work_dir)

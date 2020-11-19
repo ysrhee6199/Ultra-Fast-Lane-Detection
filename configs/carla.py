@@ -40,7 +40,6 @@ resume = None
 test_model = None
 test_work_dir = None
 test_txt = 'test.txt'  # default: test.txt
-test_splits = [test_txt]  # for demo.py
 
 num_lanes = 4
 

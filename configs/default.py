@@ -40,7 +40,6 @@ resume = None
 test_model = None
 test_work_dir = None
 test_txt = 'test.txt'
-test_splits = [test_txt]  # for demo.py
 
 num_lanes = 4
 
@@ -59,6 +58,17 @@ train_img_height = 288
 train_img_width = 800
 
 
+input_mode='images'
+output_mode='test'
+measure_time=False
+video_input_file=None
+camera_input_cam_number=0
+screencap_recording_area = [0, 0, 1920, 1080]  # x(left), y(top), w, h
+
+video_out_enable_live_video = True
+video_out_enable_video_export = False
+video_out_enable_image_export = False
+video_out_enable_line_mode = False
 
 
 

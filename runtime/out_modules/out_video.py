@@ -11,13 +11,12 @@ from utils.global_config import cfg, adv_cfg
 
 
 def get_lane_color(i: int) -> Tuple:
-    """
-    Get a predefined colors depending on i. Colors repeat if i gets to big
+    """ Get a predefined colors depending on i. Colors repeat if i gets to big
+
     Args:
         i: any number, same number, same color
 
     Returns: Tuple containing 3 values, eg (255, 0, 0)
-
     """
     lane_colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255)]
     return lane_colors[i % 5]
@@ -26,25 +25,29 @@ def get_lane_color(i: int) -> Tuple:
 class VisualOut:
     """
     provides the ability to different visual output types
-    - live video
-    - record video
-    - save images
+
+    * live video
+    * record video
+    * save images
+
     visualization can be points or lines
     """
 
     def __init__(
             self,
-            enable_live_video=True,
-            enable_video_export=False,
-            enable_image_export=False,
-            enable_line_mode=False,
+            enable_live_video=cfg.video_out_enable_live_video,
+            enable_video_export=cfg.video_out_enable_video_export,
+            enable_image_export=cfg.video_out_enable_image_export,
+            enable_line_mode=cfg.video_out_enable_line_mode,
     ):
         """
+        used non-basic-cfg values: cfg.video_out_enable_live_video, cfg.video_out_enable_video_export, cfg.video_out_enable_image_export, cfg.video_out_enable_line_mode
+
         Args:
-            enable_live_video: show video (default: True)
-            enable_video_export: save as video to disk (default: False)
-            enable_image_export: save as image files to disk (default: False)
-            enable_line_mode: visualization as lines instead of dots (default: False)
+            enable_live_video: show video
+            enable_video_export: save as video to disk
+            enable_image_export: save as image files to disk
+            enable_line_mode: visualization as lines instead of dots
         """
         self.enable_live_video = enable_live_video
         self.enable_video_export = enable_video_export
@@ -56,11 +59,12 @@ class VisualOut:
             fourcc = cv2.VideoWriter_fourcc(*'MJPG')
             out_filename = f'{get_filename_date_string()}_{cfg.dataset}.avi'
             out_full_path = os.path.join(cfg.log_path, out_filename)
+            print(out_full_path)
             self.vout = cv2.VideoWriter(out_full_path, fourcc, 30.0, (cfg.img_width, cfg.img_height))
 
     def out(self, y: torch.Tensor, names: List[str], frames: List[np.ndarray]):
-        """
-        Generate visual output
+        """ Generate visual output
+
         Args:
             y: network result (list of samples containing probabilities per sample)
             names: filenames for y, if empty: frames have to be provided

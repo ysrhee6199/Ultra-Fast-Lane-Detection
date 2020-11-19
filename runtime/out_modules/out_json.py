@@ -26,8 +26,8 @@ class JsonOut:
         self.out_file = open(self.filepath, 'w')
 
     def out(self, y, names):
-        """
-        Generate json output to text file
+        """ Generate json output to text file
+
         Args:
             y: network result (list of samples)
             names: filenames for y

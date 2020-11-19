@@ -2,7 +2,6 @@ import os
 import cv2
 import tqdm
 import numpy as np
-import pdb
 import json, argparse
 
 
@@ -42,7 +41,6 @@ def get_tusimple_list(root, label_list):
     label_json_all = []
     for l in label_list:
         l = os.path.join(root,l)
-        # import pdb; pdb.set_trace()
         label_json = [json.loads(line) for line in open(l).readlines()]
         label_json_all += label_json
     names = [l['raw_file'] for l in label_json_all]

@@ -10,23 +10,26 @@ from utils.global_config import adv_cfg, cfg
 import typing
 
 
-def input_video(process_frames: typing.Callable[[torch.Tensor, typing.List[str], typing.List[ndarray]], str],
-                input_file: typing.Union[str, int],
+def input_video(process_frames: typing.Callable[[torch.Tensor, typing.List[str], typing.List[ndarray]], None],
+                input_file: typing.Union[str, int] = cfg.video_input_source,
                 names_file: str = None
                 ):
     """
-    read a video file or camera stream
-    batch size is always 1
+    read a video file or camera stream. batch size is always 1
+
+    used non-basic-cfg values: video_input_source
+
+
     Args:
         process_frames: function taking a list of preprocessed frames, file paths and source frames
         input_file: video file (path; string) or camera index (integer)
-        names_file: list with file paths to the frames of the video
+        names_file: list with file paths to the frames of the video; if names_file and frames (jpg's) are available the input images module can also be used
     """
-    if not names_file:
-        print('no names_file specified, some functions (output modules) might not work as they require names!')
-    else:
+    if names_file:
         with open(names_file, 'r') as file:
             image_paths = file.read().splitlines()
+    # else:
+    #     print('no names_file specified, some functions (output modules) might not work as they require names!')
 
     vid = cv2.VideoCapture(input_file)
     resize = False
@@ -47,7 +50,7 @@ def input_video(process_frames: typing.Callable[[torch.Tensor, typing.List[str],
             if image.shape[0] != cfg.img_height or image.shape[1] != cfg.img_width:
                 resize = True
                 print(
-                    'your video file does not match the specified image size -> resizing frames, will impact performance.')
+                    'your video file does not match the specified image size -> resizing frames, will probably impact performance.')
 
         if resize:
             image = cv2.resize(image, (cfg.img_width, cfg.img_height))
@@ -57,3 +60,17 @@ def input_video(process_frames: typing.Callable[[torch.Tensor, typing.List[str],
         frame = adv_cfg.img_transform(frame).unsqueeze(0)
 
         process_frames(frame, [image_paths[i]] if names_file else None, [image])
+
+
+def input_camera(process_frames: typing.Callable[[torch.Tensor, typing.List[str], typing.List[ndarray]], None],
+                 camera_number: int = cfg.camera_input_cam_number,
+                 ):
+    """ camera input wrapper for input_video()
+
+    used non-basic-cfg values: camera_input_cam_number
+
+    Args:
+        process_frames: function taking a list of preprocessed frames, file paths and source frames
+        camera_number: opencv camera index
+    """
+    input_video(process_frames, camera_number)

@@ -18,17 +18,20 @@ import time
 from typing import List
 
 import torch
+import typing
 from numpy import ndarray
 
 if __name__ == '__main__':
-    print("This is a temporary Fallback! This file shouldn't be called directly anymore. Use whatever file i'll create for that in the root module")
+    print(
+        "This is a temporary Fallback! This file shouldn't be called directly anymore. Use whatever file i'll create for that in the root module")
     from utils import global_config
+
     global_config.init()
 
 from runtime.input_modules.input_images import input_images
 from model.model import parsingNet
 from runtime.input_modules.input_screencap import input_screencap
-from runtime.input_modules.input_video import input_video
+from runtime.input_modules.input_video import input_video, input_camera
 from runtime.out_modules.out_json import JsonOut
 from runtime.out_modules.out_prod import ProdOut
 from runtime.out_modules.out_test import TestOut
@@ -72,36 +75,43 @@ def setup_net():
     return net
 
 
-def setup_input(process_frame):
-    """
-    setup data input (where the frames come from)
+def setup_input(process_frames: typing.Callable[[torch.Tensor, typing.List[str], typing.List[ndarray]], None]):
+    """ setup data input (where the frames come from)
+
     Args:
-        process_frame: function taking list of frames and a corresponding list of filenames
+        process_frames: function taking list of frames and a corresponding list of filenames
     """
     if cfg.input_mode == 'images':
-        input_images(process_frame, os.path.join(cfg.data_root, cfg.test_txt), cfg.data_root)
+        input_images(process_frames)
     elif cfg.input_mode == 'video':
-        input_video(process_frame, '/home/markus/PycharmProjects/datasets/Trainingsdatensatz1/test_vid.mp4',
-                    os.path.join(cfg.data_root, cfg.test_txt))
+        input_video(process_frames)
     elif cfg.input_mode == 'camera':
-        input_video(process_frame, 0)
+        input_camera(process_frames)
     elif cfg.input_mode == 'screencap':
-        input_screencap(process_frame, {'top': 0, 'left': 3440, 'width': 1920, 'height': 1080})
+        input_screencap(process_frames,
+                        {
+                            'top': cfg.screencap_recording_area[1],
+                            'left': cfg.screencap_recording_area[0],
+                            'width': cfg.screencap_recording_area[2],
+                            'height': cfg.screencap_recording_area[3]
+                        })
     else:
         print(cfg.input_mode)
         raise NotImplemented('unknown/unsupported input_mode')
 
 
 def setup_out_method():
-    """
-    setup the output method
+    """ setup the output method
+
     Returns: method/function reference to a function taking
-    - a list of predictions
-    - a list of corresponding filenames (if available)
-    - a list of source_frames (if available)
+
+    * a list of predictions
+    * a list of corresponding filenames (if available)
+    * a list of source_frames (if available)
+
     """
     if cfg.output_mode == 'video':
-        video_out = VisualOut(enable_video_export=False)
+        video_out = VisualOut()
         return video_out.out, lambda: None
     elif cfg.output_mode == 'test':
         test_out = TestOut()
@@ -127,14 +137,14 @@ class FrameProcessor:
     def __init__(self, net, output_method):
         self.net = net
         self.output_method = output_method
-        self.measure_time = False  # TODO: move to cfg
+        self.measure_time = cfg.measure_time
         if self.measure_time:
             self.timestamp = time.time()
             self.avg_fps = []
 
     def process_frames(self, frames: torch.Tensor, names: List[str] = None, source_frames: List[ndarray] = None):
-        """
-        process frames and pass result to output_method
+        """ process frames and pass result to output_method
+
         Args:
             frames: frames to process, have to be preprocessed (scaled, as tensor, normalized)
             names: file paths - provide if possible
