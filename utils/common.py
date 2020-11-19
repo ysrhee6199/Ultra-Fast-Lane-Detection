@@ -64,6 +64,7 @@ unavailable options on cli:
     train_args.add_argument('--finetune', metavar='', type=str)
     train_args.add_argument('--resume', metavar='', type=str, help='path of existing model; continue training this model')
     train_args.add_argument('--train_gt', metavar='', type=str, help='training index file (train_gt.txt)')
+    train_args.add_argument('--on_train_copy_project_to_out_dir', metavar='', type=str2bool, help='define whether the project project directory is copied to the output directory')
 
     runtime_args.add_argument('--test_model', metavar='', type=str, help='load trained model and use it for evaluation')
     runtime_args.add_argument('--output_mode', metavar='', type=str, help='only applicable for output.py, specifies output module')
@@ -108,7 +109,7 @@ def save_model(net, optimizer, epoch, save_path, distributed):
         torch.save(state, model_path)
 
 
-# TODO: copying files with spaces in their path seems to fail
+
 def cp_projects(to_path):
     if is_main_process():
         with open('./.gitignore', 'r') as fp:
@@ -124,7 +125,7 @@ def cp_projects(to_path):
             dirs = os.path.join(to_path, 'code', os.path.split(f[2:])[0])
             if not os.path.exists(dirs):
                 os.makedirs(dirs)
-            os.system('cp %s %s' % (f, os.path.join(to_path, 'code', f[2:])))
+            os.system('cp "%s" "%s"' % (f, os.path.join(to_path, 'code', f[2:])))
 
 
 def get_work_dir(cfg):

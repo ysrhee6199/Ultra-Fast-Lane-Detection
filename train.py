@@ -143,7 +143,8 @@ if __name__ == "__main__":
     metric_dict = get_metric_dict(cfg)
     loss_dict = get_loss_dict(cfg)
     logger = get_logger(work_dir, cfg)
-    cp_projects(work_dir)
+    if cfg.on_train_copy_project_to_out_dir:
+        cp_projects(work_dir)
 
     for epoch in range(resume_epoch, cfg.epoch):
         train(net, train_loader, loss_dict, optimizer, scheduler, logger, epoch, metric_dict, cfg.use_aux)

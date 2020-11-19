@@ -58,6 +58,8 @@ train_img_height = 288
 train_img_width = 800
 
 
+on_train_copy_project_to_out_dir = True
+
 input_mode='images'
 output_mode='test'
 measure_time=False

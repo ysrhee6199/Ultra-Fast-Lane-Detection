@@ -6,7 +6,7 @@ import typing
 from PIL import Image
 from mss import mss
 
-from utils.global_config import adv_cfg
+from utils.global_config import adv_cfg, cfg
 
 
 def input_screencap(process_frames: typing.Callable, mon: dict) -> None:
@@ -18,7 +18,6 @@ def input_screencap(process_frames: typing.Callable, mon: dict) -> None:
     position and size of your target window here. If your information are wrong (out of screen) you'll get
     a cryptic exception!
     Make sure your config resolution matches your settings here.
-    TODO: scale source image to config settings
 
     Args:
         process_frames: function taking a list of preprocessed frames, file paths and source frames
@@ -26,10 +25,17 @@ def input_screencap(process_frames: typing.Callable, mon: dict) -> None:
     """
 
     sct = mss()
+    resize = False
 
     for i in count():
         screenshot = sct.grab(mon)
         image = Image.frombytes("RGB", (screenshot.width, screenshot.height), screenshot.rgb)
+
+        # resize recorded frames if resolution is different from cfg.img_height / cfg.img_width
+        if i == 0 and (image.shape[0] != cfg.img_height or image.shape[1] != cfg.img_width):
+            resize = True
+        if resize:
+            image = cv2.resize(image, (cfg.img_width, cfg.img_height))
 
         # unsqueeze: adds one dimension to tensor array (to be similar to loading multiple images)
         frame = adv_cfg.img_transform(image).unsqueeze(0)
