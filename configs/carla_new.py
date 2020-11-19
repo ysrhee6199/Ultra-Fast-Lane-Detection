@@ -1,6 +1,7 @@
 # DATA
 dataset='Carla'
-data_root = '/home/markus/PycharmProjects/datasets/Trainingsdatensatz1/'
+data_root = '/home/markus/OneDrive/Projekt_-_Fast_Lane_Detection/Datensätze/Datensatz03/'
+# data_root = '/home/markus/PycharmProjects/datasets/Trainingsdatensatz1/'
 
 
 # TRAIN

@@ -20,6 +20,11 @@ from typing import Sequence, List
 import torch
 from numpy import ndarray
 
+if __name__ == '__main__':
+    print("This is a temporary Fallback! This file shouldn't be called directly anymore. Use whatever file i'll create for that in the root module")
+    from utils import global_config
+    global_config.init()
+
 from runtime.input_modules.input_images import input_images
 from model.model import parsingNet
 from runtime.input_modules.input_screencap import input_screencap
@@ -28,6 +33,7 @@ from runtime.out_modules.out_json import JsonOut
 from runtime.out_modules.out_prod import ProdOut
 from runtime.out_modules.out_test import TestOut
 from runtime.out_modules.out_video import VisualOut
+
 from utils.global_config import cfg, adv_cfg
 
 
