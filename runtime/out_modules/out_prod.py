@@ -13,6 +13,7 @@ class ProdOut:
 
         Next step will be mapping the predicted class in a format suitable for your use case.
         Eg for image export this would be image coordinates
+
         Args:
             y: network result (list of samples)
             names: filenames for y

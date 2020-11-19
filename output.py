@@ -53,9 +53,10 @@ def setup_net():
         cls_dim=(cfg.griding_num + 1, adv_cfg.cls_num_per_lane, cfg.num_lanes),
         use_aux=False
     ).cuda()
-    # It should be noted that our method only uses the auxiliary segmentation task in the training phase, and it would
+    # use_aux: It should be noted that our method only uses the auxiliary segmentation task in the training phase, and it would
     # be removed in the testing phase. In this way, even we added the extra segmentation task, the running speed of our
     # method would not be affected.
+    # .eval: set module to evaluation mode
     net.eval()
 
     # load and apply our trained model
@@ -118,6 +119,7 @@ def setup_out_method():
 class FrameProcessor:
     """
     helper class to process frame
+
     provides simplified access to process_frame() method
     or a better encapsulation compared to functional approach (depending on implementation ;))
     """
@@ -125,7 +127,7 @@ class FrameProcessor:
     def __init__(self, net, output_method):
         self.net = net
         self.output_method = output_method
-        self.measure_time = True  # TODO: move to cfg
+        self.measure_time = False  # TODO: move to cfg
         if self.measure_time:
             self.timestamp = time.time()
             self.avg_fps = []
@@ -139,8 +141,8 @@ class FrameProcessor:
             source_frames: source images (unscaled, eg from camera) - provide if possible
         """
         if self.measure_time: time1 = time.time()
-        with torch.no_grad():
-            y = self.net(frames.cuda())  # TODO: maybe use "with torch.no_grad():" to reduce memory usage
+        with torch.no_grad():  # no_grad: disable gradient calculation. Reduces (gpu) memory consumption
+            y = self.net(frames.cuda())
         if self.measure_time: time2 = time.time()
         self.output_method(y, names, source_frames)
 

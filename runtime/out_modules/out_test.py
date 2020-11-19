@@ -1,7 +1,9 @@
 import json
 import os
+from typing import List
 
 import numpy as np
+import torch
 
 from evaluation.tusimple.lane import LaneEval
 from runtime.out_modules.common import map_x_to_image, evaluate_predictions
@@ -107,7 +109,7 @@ class TestOut:
         self.compare_file = os.path.join(cfg.data_root, out_file)
         self.lanes_pred = []
 
-    def out(self, predictions, names):
+    def out(self, predictions: torch.Tensor, names: List[str], frames: List[np.ndarray]):
         for i in range(len(predictions)):
             # get x coordinates based on probabilities
             lanes = map_x_to_image(evaluate_predictions(predictions[i]))

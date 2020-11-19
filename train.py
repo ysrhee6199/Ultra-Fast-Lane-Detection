@@ -13,7 +13,6 @@ from utils.metrics import update_metrics, reset_metrics
 from utils.common import save_model, cp_projects
 from utils.common import get_work_dir, get_logger
 
-
 import time
 
 

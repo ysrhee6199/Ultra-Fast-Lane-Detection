@@ -1,6 +1,6 @@
 import os
 import time
-from typing import List
+from typing import Tuple, List
 
 import cv2
 import numpy as np
@@ -10,7 +10,15 @@ from runtime.out_modules.common import get_filename_date_string, map_x_to_image,
 from utils.global_config import cfg, adv_cfg
 
 
-def get_lane_color(i):
+def get_lane_color(i: int) -> Tuple:
+    """
+    Get a predefined colors depending on i. Colors repeat if i gets to big
+    Args:
+        i: any number, same number, same color
+
+    Returns: Tuple containing 3 values, eg (255, 0, 0)
+
+    """
     lane_colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255)]
     return lane_colors[i % 5]
 

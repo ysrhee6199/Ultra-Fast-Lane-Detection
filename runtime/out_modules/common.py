@@ -8,7 +8,8 @@ from utils.global_config import cfg
 
 def map_x_to_image(y):
     """
-    Map x estimations to image coordinates
+    Map x-axis (griding_num) estimations to image coordinates
+
     Args:
         y: one result sample (can be directly from net or post-processed -> all number types should be accepted)
 
@@ -57,4 +58,4 @@ def get_filename_date_string():
     get current date and time in a format suitable for file exports
     Returns: string
     """
-    return datetime.datetime.now().strftime('[%Y/%m/%d %H:%M:%S]')
+    return datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')

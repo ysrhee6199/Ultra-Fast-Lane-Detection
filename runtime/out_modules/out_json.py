@@ -5,13 +5,11 @@ from runtime.out_modules.common import get_filename_date_string, map_x_to_image,
 from utils.global_config import cfg, adv_cfg
 
 
+
 class JsonOut:
     """
-    provides the ability to different visual output types
-    - live video
-    - record video
-    - save images
-    visualization can be points or lines
+    provides the ability to output detected data in a json like format (one json object per line) to a file
+    This file will be analog to the source labels you are using for training
     """
 
     def __init__(
