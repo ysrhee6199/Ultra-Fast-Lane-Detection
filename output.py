@@ -15,7 +15,7 @@
 
 import os
 import time
-from typing import Sequence, List
+from typing import List
 
 import torch
 from numpy import ndarray
@@ -101,7 +101,7 @@ def setup_out_method():
     - a list of source_frames (if available)
     """
     if cfg.output_mode == 'video':
-        video_out = VisualOut()
+        video_out = VisualOut(enable_video_export=False)
         return video_out.out, lambda: None
     elif cfg.output_mode == 'test':
         test_out = TestOut()
@@ -161,7 +161,7 @@ class FrameProcessor:
             print([round(1 / (sum(y) / len(y))) for y in zip(*self.avg_fps)])
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     out_method, post_method = setup_out_method()
     net = setup_net()
     frame_processor = FrameProcessor(net, out_method)
