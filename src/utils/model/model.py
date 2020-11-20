@@ -1,8 +1,8 @@
 import torch
-from model.backbone import resnet
+from src.utils.model.backbone import resnet
 import numpy as np
 
-from utils import global_config
+from src.utils import global_config
 
 
 class conv_bn_relu(torch.nn.Module):

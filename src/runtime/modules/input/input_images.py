@@ -6,8 +6,8 @@ import typing
 from numpy import ndarray
 from tqdm import tqdm
 
-from runtime.data.dataset import LaneDataset
-from utils.global_config import cfg, adv_cfg
+from src.runtime.utils.dataset import LaneDataset
+from src.utils.global_config import cfg, adv_cfg
 
 
 def input_images(

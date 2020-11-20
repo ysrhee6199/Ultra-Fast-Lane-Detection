@@ -29,4 +29,4 @@ def input_images(input_file, data_root):
 
 
 if __name__ == '__main__':
-    input_images('test.json', '/home/markus/OneDrive/Projekt_-_Fast_Lane_Detection/Datensätze/Datensatz03_v3/')
+    input_images('train_labels.json', '/home/markus/OneDrive/Projekt_-_Fast_Lane_Detection/Datensätze/Datensatz04/')

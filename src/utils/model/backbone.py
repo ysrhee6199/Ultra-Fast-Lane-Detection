@@ -2,15 +2,7 @@ import torch
 import torchvision
 import torch.nn.modules
 
-class vgg16bn(torch.nn.Module):
-    def __init__(self,pretrained = False):
-        super(vgg16bn,self).__init__()
-        model = list(torchvision.models.vgg16_bn(pretrained=pretrained).features.children())
-        model = model[:33]+model[34:43]
-        self.model = torch.nn.Sequential(*model)
-        
-    def forward(self,x):
-        return self.model(x)
+
 class resnet(torch.nn.Module):
     def __init__(self,layers,pretrained = False):
         super(resnet,self).__init__()

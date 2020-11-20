@@ -1,10 +1,10 @@
 import torch, os
 
 import torchvision.transforms as transforms
-import data.mytransforms as mytransforms
-from data.dataset import LaneClsDataset
-from utils import global_config
-from utils.global_config import adv_cfg
+import src.train.data.mytransforms as mytransforms
+from src.train.data.dataset import LaneClsDataset
+from src.utils import global_config
+from src.utils.global_config import adv_cfg
 
 
 def get_train_loader(batch_size, data_root, griding_num, use_aux, distributed, num_lanes, train_gt):
@@ -13,7 +13,8 @@ def get_train_loader(batch_size, data_root, griding_num, use_aux, distributed, n
         mytransforms.MaskToTensor(),
     ])
     segment_transform = transforms.Compose([
-        mytransforms.FreeScaleMask((int(global_config.cfg.train_img_height / 8), int(global_config.cfg.train_img_width / 8))),
+        mytransforms.FreeScaleMask((int(global_config.cfg.train_img_height / 8), int(
+            global_config.cfg.train_img_width / 8))),
         mytransforms.MaskToTensor(),
     ])
     img_transform = adv_cfg.img_transform

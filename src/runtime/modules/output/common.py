@@ -3,7 +3,7 @@ import datetime
 import numpy as np
 import scipy
 
-from utils.global_config import cfg
+from src.utils.global_config import cfg
 
 
 def map_x_to_image(y):

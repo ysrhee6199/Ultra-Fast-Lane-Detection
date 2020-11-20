@@ -5,9 +5,9 @@ from typing import List
 import numpy as np
 import torch
 
-from evaluation.tusimple.lane import LaneEval
-from runtime.out_modules.common import map_x_to_image, evaluate_predictions
-from utils.global_config import cfg, adv_cfg
+from src.runtime.modules.output.common import map_x_to_image, evaluate_predictions
+from src.runtime.utils.evaluation.lane import LaneEval
+from src.utils.global_config import cfg, adv_cfg
 
 
 class TestOut:

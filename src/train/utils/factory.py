@@ -1,5 +1,5 @@
-from utils.loss import SoftmaxFocalLoss, ParsingRelationLoss, ParsingRelationDis
-from utils.metrics import MultiLabelAcc, AccTopk, Metric_mIoU
+from src.train.utils.loss import SoftmaxFocalLoss, ParsingRelationLoss, ParsingRelationDis
+from src.train.utils.metrics import MultiLabelAcc, AccTopk, Metric_mIoU
 
 import torch
 

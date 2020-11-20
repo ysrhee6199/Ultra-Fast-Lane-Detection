@@ -13,7 +13,6 @@
 # achieving the best performance.
 # The main goal is to provide a good understandable and expandable / adaptable code base.
 
-import os
 import time
 from typing import List
 
@@ -21,23 +20,16 @@ import torch
 import typing
 from numpy import ndarray
 
-if __name__ == '__main__':
-    print(
-        "This is a temporary Fallback! This file shouldn't be called directly anymore. Use whatever file i'll create for that in the root module")
-    from utils import global_config
+from src.runtime.modules.input.input_images import input_images
+from src.runtime.modules.input.input_screencap import input_screencap
+from src.runtime.modules.input.input_video import input_video, input_camera
+from src.runtime.modules.output.out_json import JsonOut
+from src.runtime.modules.output.out_prod import ProdOut
+from src.runtime.modules.output.out_test import TestOut
+from src.runtime.modules.output.out_video import VisualOut
+from src.utils.model.model import parsingNet
 
-    global_config.init()
-
-from runtime.input_modules.input_images import input_images
-from model.model import parsingNet
-from runtime.input_modules.input_screencap import input_screencap
-from runtime.input_modules.input_video import input_video, input_camera
-from runtime.out_modules.out_json import JsonOut
-from runtime.out_modules.out_prod import ProdOut
-from runtime.out_modules.out_test import TestOut
-from runtime.out_modules.out_video import VisualOut
-
-from utils.global_config import cfg, adv_cfg
+from src.utils.global_config import cfg, adv_cfg
 
 
 def setup_net():
@@ -117,7 +109,8 @@ def setup_out_method():
         test_out = TestOut()
         return test_out.out, test_out.post
     elif cfg.output_mode == 'json':
-        return JsonOut().out, lambda: None
+        json_out = JsonOut()
+        return json_out.out, json_out.post
     elif cfg.output_mode == 'prod':
         prod_out = ProdOut()
         return prod_out.out, prod_out.post
@@ -171,7 +164,7 @@ class FrameProcessor:
             print([round(1 / (sum(y) / len(y))) for y in zip(*self.avg_fps)])
 
 
-if __name__ == '__main__':
+def main():
     out_method, post_method = setup_out_method()
     net = setup_net()
     frame_processor = FrameProcessor(net, out_method)

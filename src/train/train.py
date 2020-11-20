@@ -1,17 +1,16 @@
-from utils import global_config
+from src.train.utils.common import get_logger, cp_projects, save_model
+from src.train.utils.dist_utils import dist_tqdm, dist_print
+from src.train.utils.factory import get_optimizer, get_scheduler, get_metric_dict, get_loss_dict
+from src.utils import global_config
 
 import torch, os, datetime
 
-from model.model import parsingNet
-from data.dataloader import get_train_loader
+from src.utils.model.model import parsingNet
+from src.train.data.dataloader import get_train_loader
 
-from utils.dist_utils import dist_print, dist_tqdm
-from utils.factory import get_metric_dict, get_loss_dict, get_optimizer, get_scheduler
-from utils.global_config import adv_cfg
-from utils.metrics import update_metrics, reset_metrics
+from src.utils.global_config import adv_cfg
+from src.train.utils.metrics import update_metrics, reset_metrics
 
-from utils.common import save_model, cp_projects
-from utils.common import get_work_dir, get_logger
 
 import time
 
@@ -96,7 +95,7 @@ def main():
     args = global_config.args
     cfg = global_config.cfg
 
-    work_dir = get_work_dir(cfg)
+    work_dir = adv_cfg.train_dir(cfg)
 
     distributed = False
     if 'WORLD_SIZE' in os.environ:

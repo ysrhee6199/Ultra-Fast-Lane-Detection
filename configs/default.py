@@ -73,6 +73,7 @@ video_out_enable_video_export = False
 video_out_enable_image_export = False
 video_out_enable_line_mode = False
 
+mode = None  # user should select mode or manually set it in his own configs
 
 
 test_validation_data = 'test.json'

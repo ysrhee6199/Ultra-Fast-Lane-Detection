@@ -1,8 +1,8 @@
 import json
 import os
 
-from runtime.out_modules.common import get_filename_date_string, map_x_to_image, evaluate_predictions
-from utils.global_config import cfg, adv_cfg
+from src.runtime.modules.output.common import get_filename_date_string, map_x_to_image, evaluate_predictions
+from src.utils.global_config import cfg, adv_cfg
 
 
 class JsonOut:
@@ -43,3 +43,6 @@ class JsonOut:
             })
 
             self.out_file.write(json_string + '\n')
+
+    def post(self):
+        self.out_file.close()

@@ -1,9 +1,4 @@
 import argparse
-from utils.dist_utils import is_main_process, dist_print, DistSummaryWriter
-from utils.config import Config
-import datetime, os
-import torch
-import pathspec
 
 
 def str2bool(v):
@@ -34,6 +29,7 @@ unavailable options on cli:
 
     # define switches
     basics.add_argument('config', help='path to config file')
+    basics.add_argument('--mode', metavar='', type=str, help='Basic modes: train, runtime; special modes: test, preview, prod, benchmark')
     basics.add_argument('--dataset', metavar='', type=str, help='dataset name, can be any string')
     basics.add_argument('--data_root', metavar='', type=str, help='root directory of your dataset')
     basics.add_argument('--batch_size', metavar='', type=int, help='size of samples dataloader will load for each batch')
@@ -67,8 +63,8 @@ unavailable options on cli:
     train_args.add_argument('--on_train_copy_project_to_out_dir', metavar='', type=str2bool, help='define whether the project project directory is copied to the output directory')
 
     runtime_args.add_argument('--trained_model', metavar='', type=str, help='load trained model and use it for evaluation')
-    runtime_args.add_argument('--output_mode', metavar='', type=str, help='only applicable for output.py, specifies output module')
-    runtime_args.add_argument('--input_mode', metavar='', type=str, help='only applicable for output.py, specifies input module')
+    runtime_args.add_argument('--output_mode', metavar='', type=str, help='specifies output module')
+    runtime_args.add_argument('--input_mode', metavar='', type=str, help='specifies input module')
     runtime_args.add_argument('--measure_time', metavar='', type=str2bool, help='enable speed measurement')
     runtime_args.add_argument('--test_txt', metavar='', type=str, help='testing index file (test.txt)')
 
@@ -84,67 +80,3 @@ unavailable options on cli:
     out_modules.add_argument('--video_out_enable_line_mode', metavar='', type=str2bool, help='enable/disable visualize as lines instead of points')
     # @formatter:on
     return parser
-
-
-def merge_config() -> Config:
-    """ combines default and user-config and cli arguments
-    """
-    args = get_args().parse_args()
-    user_cfg = Config.fromfile(args.config)
-    cfg = Config.fromfile('configs/default.py')
-
-    # override default cfg with values from user cfg
-    for item in [(k, v) for k, v in user_cfg.items() if v]:
-        cfg[item[0]] = item[1]
-
-    for k,v in vars(args).items():
-        if v:
-            dist_print('merge ', (k,v), ' config')
-            setattr(cfg, k, v)
-    return cfg
-
-
-def save_model(net, optimizer, epoch, save_path, distributed):
-    if is_main_process():
-        model_state_dict = net.state_dict()
-        state = {'model': model_state_dict, 'optimizer': optimizer.state_dict()}
-        # state = {'model': model_state_dict}
-        assert os.path.exists(save_path)
-        model_path = os.path.join(save_path, 'ep%03d.pth' % epoch)
-        torch.save(state, model_path)
-
-
-
-def cp_projects(to_path):
-    if is_main_process():
-        with open('./.gitignore', 'r') as fp:
-            ign = fp.read()
-        ign += '\n.git'
-        spec = pathspec.PathSpec.from_lines(pathspec.patterns.GitWildMatchPattern, ign.splitlines())
-        all_files = {os.path.join(root, name) for root, dirs, files in os.walk('./') for name in files}
-        matches = spec.match_files(all_files)
-        matches = set(matches)
-        to_cp_files = all_files - matches
-        # to_cp_files = [f[2:] for f in to_cp_files]
-        for f in to_cp_files:
-            dirs = os.path.join(to_path, 'code', os.path.split(f[2:])[0])
-            if not os.path.exists(dirs):
-                os.makedirs(dirs)
-            os.system('cp "%s" "%s"' % (f, os.path.join(to_path, 'code', f[2:])))
-
-
-def get_work_dir(cfg):
-    now = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
-    hyper_param_str = '_lr_%1.0e_b_%d' % (cfg.learning_rate, cfg.batch_size)
-    work_dir = os.path.join(cfg.work_dir, now + hyper_param_str + cfg.note)
-    return work_dir
-
-
-def get_logger(work_dir, cfg):
-    logger = DistSummaryWriter(work_dir)
-    config_txt = os.path.join(work_dir, 'cfg.txt')
-    if is_main_process():
-        with open(config_txt, 'w') as fp:
-            fp.write(str(cfg))
-
-    return logger
