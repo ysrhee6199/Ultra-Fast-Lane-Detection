@@ -63,7 +63,7 @@ def setup_net():
     net.eval()
 
     # load and apply our trained model
-    state_dict = torch.load(cfg.test_model, map_location='cpu')['model']
+    state_dict = torch.load(cfg.trained_model, map_location='cpu')['model']
     compatible_state_dict = {}
     for k, v in state_dict.items():
         if 'module.' in k:

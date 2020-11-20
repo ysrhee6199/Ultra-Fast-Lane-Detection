@@ -14,7 +14,7 @@ class JsonOut:
     def __init__(
             self,
             filepath=os.path.join(
-                cfg.log_path,
+                cfg.work_dir,
                 f'{get_filename_date_string()}_{cfg.dataset}_{os.path.splitext(os.path.basename(cfg.test_txt)[-1])[0]}.json'
             )
     ):

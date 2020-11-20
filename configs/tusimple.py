@@ -30,14 +30,14 @@ shp_loss_w = 0.0
 # EXP
 note = ''
 
-log_path = '/home/markus/master_project/tusimpleroot/log/'
+work_dir = '/home/markus/master_project/tusimpleroot/log/'
 
 # FINETUNE or RESUME MODEL PATH
 finetune = None
 resume = None
 
 # TEST
-test_model = None
+trained_model = None
 test_work_dir = None
 test_txt = None  # default: test.txt
 

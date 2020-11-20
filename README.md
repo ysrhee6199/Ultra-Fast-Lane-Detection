@@ -19,9 +19,9 @@ alt="Demo" width="240" height="180" border="10" /></a>
 Please see [INSTALL.md](./INSTALL.md)
 
 # Get started
-First of all, please modify `data_root` and `log_path` in your `configs/culane.py` or `configs/tusimple.py` config according to your environment. 
+First of all, please modify `data_root` and `work_dir` in your `configs/culane.py` or `configs/tusimple.py` config according to your environment. 
 - `data_root` is the path of your CULane dataset or Tusimple dataset. 
-- `log_path` is where tensorboard logs, trained models and code backup are stored. ***It should be placed outside of this project.***
+- `work_dir` is where tensorboard logs, trained models and code backup are stored. ***It should be placed outside of this project.***
 
 
 
@@ -41,7 +41,7 @@ python -m torch.distributed.launch --nproc_per_node=$NGPUS train.py configs/path
 ```
 If there is no pretrained torchvision model, multi-gpu training may result in multiple downloading. You can first download the corresponding models manually, and then restart the multi-gpu training.
 
-Since our code has auto backup function which will copy all codes to the `log_path` according to the gitignore, additional temp file might also be copied if it is not filtered by gitignore, which may block the execution if the temp files are large. So you should keep the working directory clean.
+Since our code has auto backup function which will copy all codes to the `work_dir` according to the gitignore, additional temp file might also be copied if it is not filtered by gitignore, which may block the execution if the temp files are large. So you should keep the working directory clean.
 ***
 
 Besides config style settings, we also support command line style one. You can override a setting like
@@ -55,7 +55,7 @@ The ```batch_size``` will be set to 8 during training.
 To visualize the log with tensorboard, run
 
 ```Shell
-tensorboard --logdir log_path --bind_all
+tensorboard --logdir work_dir --bind_all
 ```
 
 # Trained models
@@ -71,9 +71,9 @@ For evaluation, run
 mkdir tmp
 # This a bad example, you should put the temp files outside the project.
 
-python test.py configs/culane.py --test_model path_to_culane_18.pth --test_work_dir ./tmp
+python test.py configs/culane.py --trained_model path_to_culane_18.pth --test_work_dir ./tmp
 
-python test.py configs/tusimple.py --test_model path_to_tusimple_18.pth --test_work_dir ./tmp
+python test.py configs/tusimple.py --trained_model path_to_tusimple_18.pth --test_work_dir ./tmp
 ```
 
 Same as training, multi-gpu evaluation is also supported.
@@ -82,9 +82,9 @@ Same as training, multi-gpu evaluation is also supported.
 
 We provide a script to visualize the detection results. Run the following commands to visualize on the testing set of CULane and Tusimple.
 ```Shell
-python demo.py configs/culane.py --test_model path_to_culane_18.pth
+python demo.py configs/culane.py --trained_model path_to_culane_18.pth
 # or
-python demo.py configs/tusimple.py --test_model path_to_tusimple_18.pth
+python demo.py configs/tusimple.py --trained_model path_to_tusimple_18.pth
 ```
 
 Since the testing set of Tusimple is not ordered, the visualized video might look bad and we **do not recommend** doing this.

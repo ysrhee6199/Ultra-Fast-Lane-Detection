@@ -11,13 +11,13 @@ import typing
 
 
 def input_video(process_frames: typing.Callable[[torch.Tensor, typing.List[str], typing.List[ndarray]], None],
-                input_file: typing.Union[str, int] = cfg.video_input_source,
+                input_file: typing.Union[str, int] = cfg.video_input_file,
                 names_file: str = None
                 ):
     """
     read a video file or camera stream. batch size is always 1
 
-    used non-basic-cfg values: video_input_source
+    used non-basic-cfg values: video_input_file
 
 
     Args:

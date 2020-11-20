@@ -58,7 +58,7 @@ class VisualOut:
             # init video out
             fourcc = cv2.VideoWriter_fourcc(*'MJPG')
             out_filename = f'{get_filename_date_string()}_{cfg.dataset}.avi'
-            out_full_path = os.path.join(cfg.log_path, out_filename)
+            out_full_path = os.path.join(cfg.work_dir, out_filename)
             print(out_full_path)
             self.vout = cv2.VideoWriter(out_full_path, fourcc, 30.0, (cfg.img_width, cfg.img_height))
 
@@ -105,7 +105,7 @@ class VisualOut:
                 self.vout.write(vis)
             if self.enable_image_export:
                 out_path = os.path.join(
-                    cfg.log_path,
+                    cfg.work_dir,
                     f'{get_filename_date_string()}_out', names[i] if names else int(time.time() * 1000000)
                 )  # use current timestamp (nanoseconds) as fallback
                 cv2.imwrite(out_path, vis)

@@ -40,7 +40,7 @@ unavailable options on cli:
     basics.add_argument('--backbone', metavar='', type=str, help="define which resnet backbone to use, allowed values: ['18', '34', '50', '101', '152', '50next', '101next', '50wide', '101wide']")
     basics.add_argument('--griding_num', metavar='', type=int, help='x resolution of nn, just like h_samples are the y resolution')
     basics.add_argument('--note', metavar='', type=str, help='suffix for working directory (probably good to give them a rememberable name')
-    basics.add_argument('--log_path', metavar='', type=str, help='working directory: every output will be written here')
+    basics.add_argument('--work_dir', metavar='', type=str, help='working directory: every output will be written here')
     basics.add_argument('--use_aux', metavar='', type=str2bool, help='used to improve training, should be disabled during runtime (independent of this config)')
     basics.add_argument('--num_lanes', metavar='', type=int, help='number of lanes')
     basics.add_argument('--img_height', metavar='', type=int, help='height of input images')
@@ -66,7 +66,7 @@ unavailable options on cli:
     train_args.add_argument('--train_gt', metavar='', type=str, help='training index file (train_gt.txt)')
     train_args.add_argument('--on_train_copy_project_to_out_dir', metavar='', type=str2bool, help='define whether the project project directory is copied to the output directory')
 
-    runtime_args.add_argument('--test_model', metavar='', type=str, help='load trained model and use it for evaluation')
+    runtime_args.add_argument('--trained_model', metavar='', type=str, help='load trained model and use it for evaluation')
     runtime_args.add_argument('--output_mode', metavar='', type=str, help='only applicable for output.py, specifies output module')
     runtime_args.add_argument('--input_mode', metavar='', type=str, help='only applicable for output.py, specifies input module')
     runtime_args.add_argument('--measure_time', metavar='', type=str2bool, help='enable speed measurement')
@@ -131,7 +131,7 @@ def cp_projects(to_path):
 def get_work_dir(cfg):
     now = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
     hyper_param_str = '_lr_%1.0e_b_%d' % (cfg.learning_rate, cfg.batch_size)
-    work_dir = os.path.join(cfg.log_path, now + hyper_param_str + cfg.note)
+    work_dir = os.path.join(cfg.work_dir, now + hyper_param_str + cfg.note)
     return work_dir
 
 
