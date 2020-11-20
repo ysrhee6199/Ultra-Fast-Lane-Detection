@@ -90,7 +90,7 @@ def train(net, data_loader, loss_dict, optimizer, scheduler, logger, epoch, metr
         t_data_0 = time.time()
 
 
-if __name__ == "__main__":
+def main():
     torch.backends.cudnn.benchmark = True
 
     args = global_config.args
@@ -151,3 +151,6 @@ if __name__ == "__main__":
 
         save_model(net, optimizer, epoch, work_dir, distributed)
     logger.close()
+
+if __name__ == "__main__":
+    main()

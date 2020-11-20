@@ -66,6 +66,7 @@ measure_time=False
 video_input_file=None
 camera_input_cam_number=0
 screencap_recording_area = [0, 0, 1920, 1080]  # x(left), y(top), w, h
+screencap_enable_image_forwarding = True # Disabling this will prevent you from using most out modules. Probably only usefull in some edge cases
 
 video_out_enable_live_video = True
 video_out_enable_video_export = False

@@ -93,9 +93,16 @@ class VisualOut:
                         img_y = adv_cfg.scaled_h_samples[j]
                         if img_x != -2:
                             if self.enable_line_mode:
-                                if j > 0:
-                                    cv2.line(vis, (lane[j - 1], adv_cfg.scaled_h_samples[j - 1]), (img_x, img_y), color,
-                                             5)
+                                # find all previous points for current lane (in reverse order) that are not -2
+                                # and store indexes of these points in prev_points
+                                prev_points = [x for x in range(j - 1, -1, -1) if lane[x] != -2]
+                                if prev_points:
+                                    cv2.line(
+                                        vis,
+                                        (lane[prev_points[0]], adv_cfg.scaled_h_samples[prev_points[0]]),
+                                        (img_x, img_y), color,
+                                        5
+                                    )
                             else:
                                 cv2.circle(vis, (img_x, img_y), 5, color, -1)
             if self.enable_live_video:

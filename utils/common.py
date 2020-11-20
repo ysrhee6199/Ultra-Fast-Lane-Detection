@@ -70,13 +70,18 @@ unavailable options on cli:
     runtime_args.add_argument('--output_mode', metavar='', type=str, help='only applicable for output.py, specifies output module')
     runtime_args.add_argument('--input_mode', metavar='', type=str, help='only applicable for output.py, specifies input module')
     runtime_args.add_argument('--measure_time', metavar='', type=str2bool, help='enable speed measurement')
+    runtime_args.add_argument('--test_txt', metavar='', type=str, help='testing index file (test.txt)')
 
     in_modules.add_argument('--video_input_file', metavar='', type=str, help='full filepath to video file you want to use as input')
     in_modules.add_argument('--camera_input_cam_number', metavar='', type=int, help='number of your camera')
     in_modules.add_argument('--screencap_recording_area', metavar='', type=int, nargs='+', help='position and size of recording area: x,y,w,h')
+    in_modules.add_argument('--screencap_enable_image_forwarding', metavar='', type=str2bool, help='allows disabling image forwarding. While this will probably improve performance for this input it will prevent you from using most out_modules as also no input_file (with paths to frames on disk) is available in this module')
 
-    out_modules.add_argument('--test_txt', metavar='', type=str, help='testing index file (test.txt)')
     out_modules.add_argument('--test_validation_data', metavar='', type=str, help='file containing labels for test data to validate test results')
+    out_modules.add_argument('--video_out_enable_live_video', metavar='', type=str2bool, help='enable/disable live preview')
+    out_modules.add_argument('--video_out_enable_video_export', metavar='', type=str2bool, help='enable/disable export to video file')
+    out_modules.add_argument('--video_out_enable_image_export', metavar='', type=str2bool, help='enable/disable export to images (like video, but as jpegs)')
+    out_modules.add_argument('--video_out_enable_line_mode', metavar='', type=str2bool, help='enable/disable visualize as lines instead of points')
     # @formatter:on
     return parser
 

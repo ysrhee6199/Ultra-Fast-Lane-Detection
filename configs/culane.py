@@ -46,6 +46,7 @@ num_lanes = 4
 # relative height of y coordinates. This is required to support different img_heights
 # to access the correct h_samples for your resolution you can use something like
 # [int(round(x*img_height)) for x in h_samples]
-h_samples = [x/590 for x in range(290, 591, 10)]
+# h_samples = [x/590 for x in range(290, 591, 10)]  # labels of dataset and hardcoded h_samples of original ufld project do not match, so both lines are somehow correct...
+h_samples = [x/590 for x in [248,268,289,307,328,348,369,387,408,428,449,467,488,508,529,547,567,588]]
 img_height = 590
 img_width = 1640
