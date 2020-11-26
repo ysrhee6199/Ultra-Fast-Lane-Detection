@@ -35,7 +35,7 @@ def get_train_loader(batch_size, data_root, griding_num, use_aux, distributed, n
     if distributed:
         sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
     else:
-        sampler = torch.utils.data.RandomSampler(train_dataset)
+        sampler = torch.utils.data.RandomSampler(train_dataset)  # same as shuffle = True
 
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, sampler = sampler, num_workers=4)
 
