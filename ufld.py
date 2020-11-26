@@ -1,3 +1,5 @@
+import sys
+
 from src import runtime, train
 
 from src.utils.global_config import cfg
@@ -11,7 +13,11 @@ if __name__ == "__main__":
     if cfg.mode == 'runtime':
         if not cfg.trained_model:
             raise Exception('define your trained_model')
-        runtime.main()
+        try:
+            runtime.main()
+        except KeyboardInterrupt:
+            print('quitting because of keyboard interrupt (probably ctrl + c)')
+            sys.exit(0)
     elif cfg.mode == 'train':
         train.main()
     else:

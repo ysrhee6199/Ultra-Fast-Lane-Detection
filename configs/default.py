@@ -12,6 +12,8 @@ learning_rate = 4e-4
 weight_decay = 1e-4
 momentum = 0.9
 
+local_rank = None  # set via cli, required if using distributed learning (which i am not supporting, but also did not remove related code by purpose)
+
 scheduler = 'cos' #['multi', 'cos']
 steps = [25,38]
 gamma  = 0.1
@@ -61,7 +63,7 @@ train_img_width = 800
 on_train_copy_project_to_out_dir = True
 
 input_mode='images'
-output_mode='test'
+output_mode=['test']
 measure_time=False
 video_input_file=None
 camera_input_cam_number=0

@@ -63,7 +63,7 @@ unavailable options on cli:
     train_args.add_argument('--on_train_copy_project_to_out_dir', metavar='', type=str2bool, help='define whether the project project directory is copied to the output directory')
 
     runtime_args.add_argument('--trained_model', metavar='', type=str, help='load trained model and use it for evaluation')
-    runtime_args.add_argument('--output_mode', metavar='', type=str, help='specifies output module')
+    runtime_args.add_argument('--output_mode', metavar='', type=str, action='append', help='specifies output module, can define multiple modules by using this parameter multiple times. Using multiple out-modules might decrease performance significantly')
     runtime_args.add_argument('--input_mode', metavar='', type=str, help='specifies input module')
     runtime_args.add_argument('--measure_time', metavar='', type=str2bool, help='enable speed measurement')
     runtime_args.add_argument('--test_txt', metavar='', type=str, help='testing index file (test.txt)')

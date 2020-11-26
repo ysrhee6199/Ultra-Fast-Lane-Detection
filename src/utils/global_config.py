@@ -36,19 +36,19 @@ def process_modes():
             if not cfg.test_txt or not cfg.test_validation_data:
                 raise Exception('test_txt and test_validation_data has to be specified for testing mode')
             __set_config('input_mode', 'images')
-            __set_config('output_mode', 'test')
+            __set_config('output_mode', ['test'])
         elif cfg.mode == 'preview':
             if not cfg.test_txt:
                 raise Exception('test_txt has to be specified for testing mode')
             __set_config('input_mode', 'images')
-            __set_config('output_mode', 'video')
+            __set_config('output_mode', ['video'])
             __set_config('video_out_enable_live_video', True)
         elif cfg.mode == 'prod':
             __set_config('input_mode', 'camera')
-            __set_config('output_mode', 'prod')
+            __set_config('output_mode', ['prod'])
         elif cfg.mode == 'benchmark':
             __set_config('input_mode', 'images')
-            __set_config('output_mode', 'json')
+            __set_config('output_mode', ['json'])
             __set_config('measure_time', True)
 
         cfg.mode = 'runtime'
@@ -119,6 +119,7 @@ class Dummy:
     This is a simple dummy class (mock) which will always return a dummy string for every value its asked for
     This prevents errors if this applications is run under unusual circumstances (eg doc generation)
     """
+
     def __init__(self, name):
         """
         Args:

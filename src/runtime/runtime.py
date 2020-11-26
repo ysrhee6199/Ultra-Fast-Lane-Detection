@@ -102,21 +102,39 @@ def setup_out_method():
     * a list of source_frames (if available)
 
     """
-    if cfg.output_mode == 'video':
-        video_out = VisualOut()
-        return video_out.out, lambda: None
-    elif cfg.output_mode == 'test':
-        test_out = TestOut()
-        return test_out.out, test_out.post
-    elif cfg.output_mode == 'json':
-        json_out = JsonOut()
-        return json_out.out, json_out.post
-    elif cfg.output_mode == 'prod':
-        prod_out = ProdOut()
-        return prod_out.out, prod_out.post
-    else:
-        print(cfg.output_mode)
-        raise NotImplemented('unknown/unsupported output_mode')
+    methods = []
+    for output_mode in cfg.output_mode:
+        if output_mode == 'video':
+            video_out = VisualOut()
+            methods.append((video_out.out, lambda: None))
+        elif output_mode == 'test':
+            test_out = TestOut()
+            methods.append((test_out.out, test_out.post))
+        elif output_mode == 'json':
+            json_out = JsonOut()
+            methods.append((json_out.out, json_out.post))
+        elif output_mode == 'prod':
+            prod_out = ProdOut()
+            methods.append((prod_out.out, prod_out.post))
+        else:
+            print(output_mode)
+            raise NotImplemented('unknown/unsupported output_mode')
+
+    def out_method(*args, **kwargs):
+        """
+        Call all out_methods and pass all arguments to them
+        """
+        for method in methods:
+            method[0](*args, **kwargs)
+
+    def post_method(*args, **kwargs):
+        """
+        Call all post_methods and pass all arguments to them
+        """
+        for method in methods:
+            method[1](*args, **kwargs)
+
+    return out_method, post_method
 
 
 class FrameProcessor:
