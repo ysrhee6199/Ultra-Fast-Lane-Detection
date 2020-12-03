@@ -27,9 +27,9 @@ from src.runtime.modules.output.out_json import JsonOut
 from src.runtime.modules.output.out_prod import ProdOut
 from src.runtime.modules.output.out_test import TestOut
 from src.runtime.modules.output.out_video import VisualOut
-from src.utils.model.model import parsingNet
+from src.common.model.model import parsingNet
 
-from src.utils.global_config import cfg, adv_cfg
+from src.common.config.global_config import cfg, adv_cfg
 
 
 def setup_net():

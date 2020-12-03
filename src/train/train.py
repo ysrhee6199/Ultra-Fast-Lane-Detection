@@ -1,14 +1,14 @@
 from src.train.utils.common import get_logger, cp_projects, save_model
 from src.train.utils.dist_utils import dist_tqdm, dist_print
 from src.train.utils.factory import get_optimizer, get_scheduler, get_metric_dict, get_loss_dict
-from src.utils import global_config
+from src.common.config import global_config
 
 import torch, os, datetime
 
-from src.utils.model.model import parsingNet
+from src.common.model.model import parsingNet
 from src.train.data.dataloader import get_train_loader
 
-from src.utils.global_config import adv_cfg
+from src.common.config.global_config import adv_cfg
 from src.train.utils.metrics import update_metrics, reset_metrics
 
 

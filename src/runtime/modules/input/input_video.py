@@ -5,7 +5,7 @@ import torch
 from PIL import Image
 from numpy import ndarray
 
-from src.utils.global_config import adv_cfg, cfg
+from src.common.config.global_config import adv_cfg, cfg
 
 import typing
 

@@ -5,8 +5,8 @@ from typing import Any
 
 from torchvision import transforms
 
-from src.utils.cli_parser import get_args
-from src.utils.config import Config
+from src.common.config.cli_parser import get_args
+from src.common.config.util import Config
 
 cfg = None
 adv_cfg = None

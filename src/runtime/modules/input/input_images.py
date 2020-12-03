@@ -7,7 +7,7 @@ from numpy import ndarray
 from tqdm import tqdm
 
 from src.runtime.utils.dataset import LaneDataset
-from src.utils.global_config import cfg, adv_cfg
+from src.common.config.global_config import cfg, adv_cfg
 
 
 def input_images(

@@ -3,8 +3,8 @@ import torch, os
 import torchvision.transforms as transforms
 import src.train.data.mytransforms as mytransforms
 from src.train.data.dataset import LaneClsDataset
-from src.utils import global_config
-from src.utils.global_config import adv_cfg
+from src.common.config import global_config
+from src.common.config.global_config import adv_cfg
 
 
 def get_train_loader(batch_size, data_root, griding_num, use_aux, distributed, num_lanes, train_gt):

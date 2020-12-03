@@ -1,4 +1,12 @@
+"""
+generate segmentation label files (png) and the required index files for training and testing
+
+usage: create_seg_labels_and_index_files.py --root <path to dataset> --train_files <comma seperated list of json files containing train data> --test_files <list containing test data>
+"""
+
 import os
+import warnings
+
 import cv2
 import tqdm
 import numpy as np
@@ -75,13 +83,22 @@ def generate_segmentation_and_train_list(root, line_txt, names):
     train_gt_fp = open(os.path.join(root, 'train_gt.txt'), 'w')
 
     for i in tqdm.tqdm(range(len(line_txt))):
-
         tmp_line = line_txt[i]
+        if (len(tmp_line) == 0):
+            # quick fix for invalid input data
+            print('no lines on current sample', flush=True)
+            continue
         lines = []
         for j in range(len(tmp_line)):
             lines.append(list(map(float, tmp_line[j])))
 
-        ks = np.array([calc_k(line) for line in lines])  # get the direction of each lane
+        with warnings.catch_warnings():
+            warnings.filterwarnings('error')
+            try:
+                ks = np.array([calc_k(line) for line in lines])  # get the direction of each lane
+            except np.RankWarning:
+                print('rank warning', flush=True)
+                continue
 
         k_neg = ks[ks < 0].copy()
         k_pos = ks[ks > 0].copy()

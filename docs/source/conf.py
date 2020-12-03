@@ -13,6 +13,8 @@
 import os
 import sys
 
+from recommonmark.transform import AutoStructify
+
 sys.path.insert(0, os.path.abspath('../../'))
 
 # -- Project information -----------------------------------------------------
@@ -21,13 +23,20 @@ project = 'Ultra Fast Lane Detection'
 copyright = '2020, cfzd; 2020 Markus Heck'
 author = 'cfzd, Markus Heck'
 
-
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['m2r2', 'sphinx.ext.todo', 'sphinx.ext.viewcode', 'sphinx.ext.autodoc', 'sphinx.ext.napoleon']
+extensions = [
+    'sphinx.ext.todo',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon',
+    'myst_parser',
+    'sphinx.ext.autosummary'
+]
+autosummary_generate = True
 napoleon_google_docstring = True
 napoleon_use_param = False
 autoclass_content = 'both'
@@ -52,8 +61,21 @@ html_theme = 'sphinx_rtd_theme'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+
 # apply custom css
 def setup(app):
     app.add_css_file('custom.css')
 
+    # app.add_config_value('recommonmark_config', {
+    #     'enable_eval_rst': True,
+    # }, True)
+    # app.add_transform(AutoStructify)
 
+# source_parsers = {
+#     '.md': CommonMarkParser,
+# }
+#
+# html_theme_options = {
+#     'display_version': False,
+#     'navigation_depth': 2,
+# }

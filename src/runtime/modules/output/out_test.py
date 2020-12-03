@@ -7,7 +7,7 @@ import torch
 
 from src.runtime.modules.output.common import map_x_to_image, evaluate_predictions
 from src.runtime.utils.evaluation.lane import LaneEval
-from src.utils.global_config import cfg, adv_cfg
+from src.common.config.global_config import cfg, adv_cfg
 
 
 class TestOut:

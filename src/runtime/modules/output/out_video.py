@@ -7,7 +7,7 @@ import numpy as np
 import torch
 
 from src.runtime.modules.output.common import get_filename_date_string, map_x_to_image, evaluate_predictions
-from src.utils.global_config import cfg, adv_cfg
+from src.common.config.global_config import cfg, adv_cfg
 
 
 def get_lane_color(i: int) -> Tuple:

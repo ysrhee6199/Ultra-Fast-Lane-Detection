@@ -1,7 +1,19 @@
 import json
 
+from typing import List
 
-def reduce_h_samples(file_in, file_out, keep_h_samples):
+
+def reduce_h_samples(file_in: str, file_out: str, keep_h_samples: List[int]):
+    """ Reduces the amount of h_samples.
+
+    Args:
+        file_in: Source labels file
+        file_out: target labels file
+        keep_h_samples: array of h_samples to keep (eg [10, 20, 30])
+
+    Returns:
+
+    """
     with open(file_in) as file:
         source_data = file.readlines()
 
@@ -28,5 +40,11 @@ def reduce_h_samples(file_in, file_out, keep_h_samples):
 
 
 if __name__ == '__main__':
-    reduce_h_samples('/home/markus/OneDrive/Projekt_-_Fast_Lane_Detection/Datensätze/Datensatz03/train_labels.json', '/home/markus/OneDrive/Projekt_-_Fast_Lane_Detection/Datensätze/Datensatz03/train_labels_short.json', [380, 390, 400, 410, 420, 430, 440, 450, 460, 470, 480, 490, 500, 510, 520, 530, 540, 550, 560, 570, 580, 590, 600, 610, 620, 630, 640, 650, 660, 670, 680, 690, 700, 710])
-    reduce_h_samples('/home/markus/OneDrive/Projekt_-_Fast_Lane_Detection/Datensätze/Datensatz03/test.json', '/home/markus/OneDrive/Projekt_-_Fast_Lane_Detection/Datensätze/Datensatz03/test_short.json', [380, 390, 400, 410, 420, 430, 440, 450, 460, 470, 480, 490, 500, 510, 520, 530, 540, 550, 560, 570, 580, 590, 600, 610, 620, 630, 640, 650, 660, 670, 680, 690, 700, 710])
+    reduce_h_samples('/home/markus/OneDrive/Projekt_-_Fast_Lane_Detection/Datensätze/Datensatz03/train_labels.json',
+                     '/home/markus/OneDrive/Projekt_-_Fast_Lane_Detection/Datensätze/Datensatz03/train_labels_short.json',
+                     [380, 390, 400, 410, 420, 430, 440, 450, 460, 470, 480, 490, 500, 510, 520, 530, 540, 550, 560,
+                      570, 580, 590, 600, 610, 620, 630, 640, 650, 660, 670, 680, 690, 700, 710])
+    reduce_h_samples('/home/markus/OneDrive/Projekt_-_Fast_Lane_Detection/Datensätze/Datensatz03/test.json',
+                     '/home/markus/OneDrive/Projekt_-_Fast_Lane_Detection/Datensätze/Datensatz03/test_short.json',
+                     [380, 390, 400, 410, 420, 430, 440, 450, 460, 470, 480, 490, 500, 510, 520, 530, 540, 550, 560,
+                      570, 580, 590, 600, 610, 620, 630, 640, 650, 660, 670, 680, 690, 700, 710])

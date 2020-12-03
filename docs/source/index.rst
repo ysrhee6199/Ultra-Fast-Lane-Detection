@@ -6,13 +6,16 @@
 Welcome to Ultra-Fast-Lane-Detection's documentation!
 =====================================================
 
-.. mdinclude:: ../../README.md
+
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
    :caption: Contents:
 
    modules
+   main.rst
+
+.. mdinclude:: ../../README.md
 
 Indices and tables
 ==================

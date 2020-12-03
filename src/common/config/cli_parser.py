@@ -14,6 +14,7 @@ def str2bool(v):
 
 def get_args():
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter, argument_default=None)
+    parser.usage = """python ufld.py <config file> [params]\nrun "python ufld.py --help" for more information"""
     parser.description = """Most config values can be overwritten with its corresponding cli parameters. For further details on the config options see configs/default.py and the documentation.
 unavailable options on cli:
 - h_samples

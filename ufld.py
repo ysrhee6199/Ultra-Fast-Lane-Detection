@@ -2,7 +2,7 @@ import sys
 
 from src import runtime, train
 
-from src.utils.global_config import cfg
+from src.common.config.global_config import cfg
 
 if __name__ == "__main__":
     # do some basic cfg validation and call runtime or train according to mode

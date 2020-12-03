@@ -7,7 +7,7 @@ import typing
 from PIL import Image
 from mss import mss
 
-from src.utils.global_config import adv_cfg, cfg
+from src.common.config.global_config import adv_cfg, cfg
 
 
 def input_screencap(process_frames: typing.Callable, mon: dict) -> None:
