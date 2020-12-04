@@ -48,11 +48,11 @@ The following sketch shows in red the h_samples (70, 80, 90, 100, 100). The inte
 2: [98, 99, 100, 101, 102]
 ```
 
-Since there must always be exactly four lines, two more have to be added. However, since there are no more on the image, they must be assigned to the rest class. Non-existing intersections receive the value '-2'. Since the two non-existent lines obviously belong completely to the rest class, each value in the arrays has the value -2.
+Since there must always be exactly four lines, two more have to be added. However, since there are no more on the image, they must be assigned to the rest class. Non-existing intersections receive the value `-2`. Since the two non-existent lines obviously belong completely to the rest class, each value in the arrays has the value -2.
 
 ![sketch labels](../_static/sketch_labels.jpg)
 
-Damit sind alle notwendigen Informationen für ein Label vorhanden. Für die Skizze ergibt sich somit folgendes JSON-Objekt:
+This provides all the necessary information for a label. The following JSON object results for the sketch:
 ```
 {
     "lanes": [[-2, -2, -2, -2, -2],[67, 60, 54, 45, 39], [98, 99, 100, 101, 102], [-2, -2, -2, -2, -2]],
@@ -92,7 +92,7 @@ This might take 1-2 Minutes to complete.
 This step often reveals mistakes in dataset creation. For a quick validation if your dataset has errors you can just run this script. If it completes without errors or warnings your dataset ist probably valid in terms of syntax. 
 
 ### validate data
-Its easy to make mistakes when creating a dataset. It might be a good idea to visually validate the dataset before you waste hours training garbage. "Garbage in, garbage out". We did not do this earlier as we can now use the smaller train.json or validate.json files for that step. Also the dataset passed our "semantic validation" from the previous step.
+Its easy to make mistakes when creating a dataset. It might be a good idea to visually validate the dataset before you waste hours training garbage. "Garbage in, garbage out". We did not do this earlier as we can now use the smaller `train.json` or `validate.json` files for that step. Also the dataset passed our "semantic validation" from the previous step.
 
 The script [show_labels_on_image.py](../scripts) takes a labels file name and a data(set) root. It will show the frames with the labels drawn on them.
 
@@ -102,5 +102,7 @@ Edit the file and enter your path and filename to the function call at the botto
 
 
 ## TuSimple
-bereits in train/test gesplitted
-mehrere label-files für train -> merge
+This dataset is already divided into a train and test dataset. Therefore this step can be skipped. The remaining steps are applied unchanged.
+``` shell
+python scripts/create_seg_labels_and_index_files.py --root /home/markus/master_project/tusimpleroot/ --train_files label_data_0601.json,label_data_0531.json,label_data_0313.json --test_files test_tasks_0627.json
+```

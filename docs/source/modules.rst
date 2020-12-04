@@ -1,11 +1,12 @@
-src
-===
+Code
+====
 
 .. toctree::
    :maxdepth: 4
 
+   src
    src.runtime
    src.train
-   src.utils
+   src.common
    scripts
    configs

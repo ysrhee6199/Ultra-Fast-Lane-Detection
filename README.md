@@ -10,4 +10,4 @@ The scripts directory contains many scripts "around" the project, eg to convert/
 
 
 ## Further documentation
-For Install / getting started / HOWTOs / etc please see the **full documentation.**
+For Install / getting started / HOWTOs / etc please see the **full documentation** in the docs directory.

@@ -166,6 +166,9 @@ def get_args():
 if __name__ == "__main__":
     args = get_args().parse_args()
 
+    if (not args.train_files) or (not args.test_files):
+        raise Exception('train_files or test_files missing')
+
     # training set
     names, line_txt = get_tusimple_list(args.root,
                                         args.train_files.split(',') if args.train_files else ['label_data_0601.json',

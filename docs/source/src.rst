@@ -9,7 +9,7 @@ Subpackages
 
    src.runtime
    src.train
-   src.utils
+   src.common
 
 Module contents
 ---------------
