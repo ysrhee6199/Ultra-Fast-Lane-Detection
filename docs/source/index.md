@@ -56,6 +56,9 @@ look [on this HOWTO](howto/generate_dataset_from_carla.md) which explains their 
 
 The [HOWTOs](./howto/howtos.md) section provides guides for every common usecase/problem of this application.
 
+If you can't await it to use this project in your application you can have a look on the [HOWTO: Integrate into your project](howto/integrate_into_your_own_project).
+This will give you an outline, but be warned, you won't be able to start with this howto without completing the other ones.
+
 
 
 ```{toctree}

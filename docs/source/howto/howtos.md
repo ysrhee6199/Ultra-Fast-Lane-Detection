@@ -15,7 +15,7 @@ The Howtos will guide you through the whole process starting with the collection
 
 ## Test and use the model
 [Test the model](./test.md)  
-[Integrate this project into your own project](./integrate_into_your_own_project.md)
+[Integrate UFLD into your own project](./integrate_into_your_own_project.md)
 
 
 ## TOC
