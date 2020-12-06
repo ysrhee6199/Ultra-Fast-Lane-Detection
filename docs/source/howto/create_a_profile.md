@@ -5,7 +5,7 @@ This Howto will explain how to create a config file. It's using the exam
 While in theory all parameters could be set via cli, this is impractical because of the large amount of required parameters. 
 All parameters have default values defined in the default profile. 
 We will now create a config file which overrides the most important parameters. Later you will likely change more parameters e.g. to optimize training/quality or depending on your runtime modules.
-**All available parameters are described [here](../configs.rst)**
+**All available parameters are described [here](../configs)**
 
 *Note*: CLI parameters always have the highest priority and will overwrite whatever is set in config files.
 
@@ -38,6 +38,15 @@ This value will depend on many factors.
 - **training mode**: The maximum value is limited by your VRAM. For a RESNET18 (default) 11GB of VRAM the maximum is about 56. Finding the best value requires some testing. Too low values drastically decreases performance. Too high values can also result in lower performance. The batch_size can also affect the accuracy. Something around 16 might be a good starting value.
 - **runtime mode - evaluation / test**: If the output does not have to happen in realtime simply find the batch_size providing the best performance
 - **runtime mode - realtime / live**: For realtime outputs like video preview or production use the batch size should be set to 1. Everything higher will increase FPS but also the latency. The higher FPS aren't useful in this case because only the latest sample of the batch will be of interest.
+
+This diagram shows performance measurements on a 2080Ti and an i7 8800k. 
+It shows that the best performance can be achieved with a batch size around 16. 
+
+![Diagram: benchmark batch sizes](../_static/benchmark_batchsize.png)
+
+Note that the total CPU overhead continues to decrease with higher batch sizes, which can be seen in the next diagram showing the total cpu time.
+
+![Diagram: benchmark batch sizes cpu overhead](../_static/benchmark_batchsize_cpu_overhead.png)
 
 ## Example config
 

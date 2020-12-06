@@ -14,7 +14,7 @@ def get_lane_color(i: int) -> Tuple:
     """ Get a predefined colors depending on i. Colors repeat if i gets to big
 
     Args:
-        i: any number, same number, same color
+        i: any number, same number -> same color
 
     Returns: Tuple containing 3 values, eg (255, 0, 0)
     """
@@ -24,7 +24,7 @@ def get_lane_color(i: int) -> Tuple:
 
 class VisualOut:
     """
-    provides the ability to different visual output types
+    provides different visual output types
 
     * live video
     * record video
@@ -41,7 +41,12 @@ class VisualOut:
             enable_line_mode=cfg.video_out_enable_line_mode,
     ):
         """
-        used non-basic-cfg values: cfg.video_out_enable_live_video, cfg.video_out_enable_video_export, cfg.video_out_enable_image_export, cfg.video_out_enable_line_mode
+        used non-basic-cfg values:
+
+        - cfg.video_out_enable_live_video
+        - cfg.video_out_enable_video_export
+        - cfg.video_out_enable_image_export
+        - cfg.video_out_enable_line_mode
 
         Args:
             enable_live_video: show video

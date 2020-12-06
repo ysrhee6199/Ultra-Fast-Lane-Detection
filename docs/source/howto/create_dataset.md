@@ -84,12 +84,14 @@ This script will take the data from different locations of the source file (per 
 These files can be created with the help of [create_seg_labels_and_index_files.py](../scripts). Run this file from the command line. A sample call could be:
 
 ```
-python scripts/create_seg_labels_and_index_files.py --root "/home/markus/sample_dataset/" --train_files train_labels.json --test_files test.json,validate.json
+python scripts/create_seg_labels_and_index_files.py --root "/home/markus/sample_dataset/" --train_files train_labels.json --test_files test.json
 ```
 
 This might take 1-2 Minutes to complete.
 
-This step often reveals mistakes in dataset creation. For a quick validation if your dataset has errors you can just run this script. If it completes without errors or warnings your dataset ist probably valid in terms of syntax. 
+The script currently does not support validation files. One way to proceed with `validate.json` would be to run the script again and replace `test.json` with `validate.json`.
+
+This step often reveals mistakes in dataset creation. For a quick validation you can just run this script. If it completes without errors or warnings your dataset ist probably valid in terms of syntax. 
 
 ### validate data
 Its easy to make mistakes when creating a dataset. It might be a good idea to visually validate the dataset before you waste hours training garbage. "Garbage in, garbage out". We did not do this earlier as we can now use the smaller `train.json` or `validate.json` files for that step. Also the dataset passed our "semantic validation" from the previous step.

@@ -1,17 +1,19 @@
-# supports multiple input modules
-# images: image dataset from a text file containing a list of paths to images
-# video: video input
-# stream: eg webcam
-# supports multiple output modules
-# video - generates an output video; same as demo.py
-# test - compares result with labels; same as test.py
-# prod - will probably only log results, in future you will put your production code here
-# i will not provide multi-gpu support. See test.py as a reference
-# but it might be more complicated in the end as i dont plan to support multi gpu in any way
-#
-# A note on performance: This code should provide acceptable performance, but it was not developed with the target of
-# achieving the best performance.
-# The main goal is to provide a good understandable and expandable / adaptable code base.
+"""
+supports multiple input modules
+images: image dataset from a text file containing a list of paths to images
+video: video input
+stream: eg webcam
+supports multiple output modules
+video - generates an output video; same as demo.py
+test - compares result with labels; same as test.py
+prod - will probably only log results, in future you will put your production code here
+i will not provide multi-gpu support. See test.py as a reference
+but it might be more complicated in the end as i dont plan to support multi gpu in any way
+
+A note on performance: This code should provide acceptable performance, but it was not developed with the target of
+achieving the best performance.
+The main goal is to provide a good understandable and expandable / adaptable code base.
+"""
 
 import time
 from typing import List
@@ -112,7 +114,7 @@ def setup_out_method():
             methods.append((test_out.out, test_out.post))
         elif output_mode == 'json':
             json_out = JsonOut()
-            methods.append((json_out.out, json_out.post))
+            methods.append((json_out.out, lambda: None))
         elif output_mode == 'prod':
             prod_out = ProdOut()
             methods.append((prod_out.out, prod_out.post))
@@ -154,12 +156,14 @@ class FrameProcessor:
             self.avg_fps = []
 
     def process_frames(self, frames: torch.Tensor, names: List[str] = None, source_frames: List[ndarray] = None):
-        """ process frames and pass result to output_method
+        """ process frames and pass result to output_method.
+
+        Note: length of all supplied arrays (frames, names, source_frames) must be of the same length.
 
         Args:
             frames: frames to process, have to be preprocessed (scaled, as tensor, normalized)
-            names: file paths - provide if possible
-            source_frames: source images (unscaled, eg from camera) - provide if possible
+            names: file paths - provide if possible, used by some out-modules
+            source_frames: source images (only scaled to img_height & img_width, but not further processed, eg from camera) - provide if possible - used by some out modules
         """
         if self.measure_time: time1 = time.time()
         with torch.no_grad():  # no_grad: disable gradient calculation. Reduces (gpu) memory consumption
@@ -183,6 +187,8 @@ class FrameProcessor:
 
 
 def main():
+    """ Entry method for this package.
+    """
     out_method, post_method = setup_out_method()
     net = setup_net()
     frame_processor = FrameProcessor(net, out_method)

@@ -1,4 +1,4 @@
-# README
+# UFLD Documentation
 
 ## Project overview
 
@@ -63,8 +63,9 @@ The [HOWTOs](./howto/howtos.md) section provides guides for every common usecase
 maxdepth: 1
 caption: Contents
 ---
-howto/howtos
-modules
+./howto/howtos
+./modules
+./scripts
 ```
 
 

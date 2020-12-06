@@ -17,7 +17,9 @@ def input_video(process_frames: typing.Callable[[torch.Tensor, typing.List[str],
     """
     read a video file or camera stream. batch size is always 1
 
-    used non-basic-cfg values: video_input_file
+    used non-basic-cfg values:
+
+    - video_input_file
 
 
     Args:
@@ -67,7 +69,9 @@ def input_camera(process_frames: typing.Callable[[torch.Tensor, typing.List[str]
                  ):
     """ camera input wrapper for input_video()
 
-    used non-basic-cfg values: camera_input_cam_number
+    used non-basic-cfg values:
+
+    - camera_input_cam_number
 
     Args:
         process_frames: function taking a list of preprocessed frames, file paths and source frames

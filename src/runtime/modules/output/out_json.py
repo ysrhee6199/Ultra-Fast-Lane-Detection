@@ -43,6 +43,3 @@ class JsonOut:
             })
 
             self.out_file.write(json_string + '\n')
-
-    def post(self):
-        self.out_file.close()

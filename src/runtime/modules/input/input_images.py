@@ -16,7 +16,9 @@ def input_images(
         data_root=cfg.data_root):
     """ load images frame by frame and passes them to process_frame
 
-    used non-basic-cfg values: test_txt
+    used non-basic-cfg values:
+
+    - test_txt
 
     Args:
         process_frames: function taking a list of preprocessed frames, file paths and source frames

@@ -1,6 +1,8 @@
 src.runtime.modules package
 ===========================
 
+This package contains the input and output modules.
+
 Subpackages
 -----------
 

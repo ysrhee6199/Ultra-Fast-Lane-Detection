@@ -1,7 +1,12 @@
+"""
+Contains some common helper functions for output modules
+"""
+
+
 import datetime
 
 import numpy as np
-import scipy
+from scipy import special
 
 from src.common.config.global_config import cfg
 
@@ -45,7 +50,7 @@ def evaluate_predictions(y):
     out_loc = np.argmax(out, axis=0)  # get most probably x-class per lane and h_sample
 
     # do some stuff i dont fully understand to improve x accuracy
-    prob = scipy.special.softmax(out[:-1, :, :], axis=0)  # relative probability with sum() == 1.0
+    prob = special.softmax(out[:-1, :, :], axis=0)  # relative probability with sum() == 1.0
     idx = np.arange(cfg.griding_num).reshape(-1, 1, 1)  # init 3 dim array containing numbers from 0 to griding_num - 1
     loc = np.sum(prob * idx, axis=0)  # calculate more accurate x values
 

@@ -18,12 +18,10 @@ The Howtos will guide you through the whole process starting with the collection
 [Integrate this project into your own project](./integrate_into_your_own_project.md)
 
 
-
-
+## TOC
 ```{toctree}
 ---
 maxdepth: 2
-caption: Using MyST Markdown
 ---
 carla_setup.md
 setup.md
