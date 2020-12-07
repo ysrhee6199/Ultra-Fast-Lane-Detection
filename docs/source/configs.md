@@ -3,10 +3,23 @@ All available parameters with their default values are listed below. They are so
 Another way to see all options (besides h_samples) is by running `ufld.py --help` (output is below on this page), 
 where the options are grouped.
 
-TODO: h_samples
 
 ## h_samples
 See [HOWTO: Create dataset - labels file specification](./howto/create_a_profile.html#h-samples) for more information.
+
+## mode
+This application provides two modes it can be run with. 
+`train` for training a model and `runtime` for everything "after" training like testing, validation or production use.
+
+There are also some special modes. They also define one of the basic modes (the current special modes are all using runtime), but additionally override some other configs.
+- `test`: Short hand to test a model  
+  set input to images and output to test
+- `preview`: Short hand to show a life video of the net's predictions  
+  set input to images, output to video and enable live video
+- `prod`: Short hadn for production mode  
+  set input to camera and output to prod
+- `benchmark`: Short hand to benchmark  
+  set input to images and output to json (the simplest output module) and enables measure_time
 
 ## default configuration
 ```{eval-rst}

@@ -21,11 +21,11 @@ fail. See [creating a dataset](./howto/create_a_profile.md) for details.
 
 The main application is used by running the `ufld.py` file. The usage of the scripts is different per script. See their documentation / the howtos for details on their usage.
 
-### Setup
+## Setup
 
 See [HOWTO: Setup](./howto/setup.md)
 
-### Config/CLI Parameters
+## Config/CLI Parameters
 
 Every parameter has a default value, specified in the default profile. Every config entry can be overridden in a custom
 config and also via CLI. To use config options via the CLI interface prefix them with `--`, eg `--batch_size 16`. All
@@ -59,6 +59,11 @@ The [HOWTOs](./howto/howtos.md) section provides guides for every common usecase
 If you can't await it to use this project in your application you can have a look on the [HOWTO: Integrate into your project](howto/integrate_into_your_own_project).
 This will give you an outline, but be warned, you won't be able to start with this howto without completing the other ones.
 
+
+## Build documentation
+The project has to be [set up](./howto/setup). 
+1. Change to `docs/`
+2. Run `make html`
 
 
 ```{toctree}

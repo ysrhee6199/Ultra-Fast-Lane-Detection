@@ -78,3 +78,29 @@ This code can now be removed, but this change isn't that important, as the `init
 
 A potential problem could be the CLI argument parsing of this project.
 This functionality is only required in a standalone version and should now be removed to avoid problems with the main application.
+
+## Improve runtime performance
+Especially on batch_size 1 (which should be used in live scenarios) and on slower hardware the fps might drop below 10.
+As this could be too slow i will provider some concepts to improve performance
+
+### Rewrite runtime
+The first idea you might get is "writing an optimized version of the runtime package".
+While this is idea isn't wrong, there are other aspects you should look first. 
+For this project performance was not the first priority, so I did some compromises in favor of understandable and expandable code.
+So it's definitely possible to improve performance with this approach a bit, but at least it should not be the first thing to start with.
+
+### Optimize input module
+This concept is probably the most promising one. Preprocessing (and Postprocessing) consumes a lot of computing time.
+Some ideas are
+- Lower camera / input frame resolution  
+  You don't benefit from high resolutions like Full HD. 
+  Before you can pass a frame to `process_frames` it has to be scaled down the nets resolution (per default: 800x288)
+- Especially if your module is compute heavy using hw acceleration or multiple cores might improve performance significantly.  
+  Beware that a python interpreter is locked to one single core, even if using multiple threads, but there are ways to use multiple cores.
+- Process multiple frames at the same time.  
+  Using batch sizes above 1 doesn't help, but you could pass another frame to the net before the previous one returned.
+  This won't improve the latency (instead it might increase latency a bit due to higher cpu / gpu usage), but it will increase fps, because with batch_size 1 neither cpu nor gpu will be highly utilized.
+- Use optimized (C) code for compute heavy tasks
+
+### Optimizing output module
+Just like explained for input modules, use multiple cores, let another application process data or use better performing code.

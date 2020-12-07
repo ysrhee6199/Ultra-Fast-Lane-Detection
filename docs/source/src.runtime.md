@@ -35,6 +35,14 @@ another module should be developed which combines the respective modules.
 
 See [output modules](./src.runtime.modules.output) for further information.
 
+## Measure performance
+To benchmark the runtime just set `measure_time` to `True`. 
+This will log the time each frame took to stdout. 
+When the application exits, you will also see the average values over the whole execution. 
+You will get three values:
+- real fps
+- fps without output module
+- fps without output module and without input module
 
 ## Subpackages
 
