@@ -102,5 +102,11 @@ Some ideas are
   This won't improve the latency (instead it might increase latency a bit due to higher cpu / gpu usage), but it will increase fps, because with batch_size 1 neither cpu nor gpu will be highly utilized.
 - Use optimized (C) code for compute heavy tasks
 
+Another approach that might increase performance would be to crop images before passing to the net. 
+The idea is to remove the sky (where obviously are no lanes) to decrease the data that has to be processed.
+Make sure that you don't spend more computing time for cropping than you save by evaluating the data.
+
+Also decreasing the amount of h_samples will slightly increase performance.
+
 ### Optimizing output module
 Just like explained for input modules, use multiple cores, let another application process data or use better performing code.
