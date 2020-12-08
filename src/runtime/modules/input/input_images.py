@@ -34,7 +34,8 @@ def input_images(
     # multithreading (and probably their python code is also optimized better than mine was)
     # -> use DataLoader and load images again from disk if required
     loader = torch.utils.data.DataLoader(dataset, batch_size=cfg.batch_size, shuffle=False, num_workers=4)
+    tqdm_bar = tqdm(loader)
 
-    for i, data in enumerate(tqdm(loader)):
+    for i, data in enumerate(tqdm_bar):
         imgs, names = data
-        process_frames(imgs, names)
+        process_frames(imgs, names, tqdm_bar = tqdm_bar)

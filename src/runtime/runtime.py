@@ -155,7 +155,8 @@ class FrameProcessor:
             self.timestamp = time.time()
             self.avg_fps = []
 
-    def process_frames(self, frames: torch.Tensor, names: List[str] = None, source_frames: List[ndarray] = None):
+    def process_frames(self, frames: torch.Tensor, names: List[str] = None, source_frames: List[ndarray] = None,
+                       tqdm_bar=None):
         """ process frames and pass result to output_method.
 
         Note: length of all supplied arrays (frames, names, source_frames) must be of the same length.
@@ -164,6 +165,7 @@ class FrameProcessor:
             frames: frames to process, have to be preprocessed (scaled, as tensor, normalized)
             names: file paths - provide if possible, used by some out-modules
             source_frames: source images (only scaled to img_height & img_width, but not further processed, eg from camera) - provide if possible - used by some out modules
+            tqdm_bar: if using a tqdm progress bar in an input module pass it via this variable for better performance logging (if measure_time is eanbled)
         """
         if self.measure_time: time1 = time.time()
         with torch.no_grad():  # no_grad: disable gradient calculation. Reduces (gpu) memory consumption
@@ -175,15 +177,20 @@ class FrameProcessor:
             real_time = (time.time() - self.timestamp) / len(y)
             synthetic_time = (time2 - time1) / len(y)
             real_time_wo_out = (time2 - self.timestamp) / len(y)
-            print(
-                f'fps real: {round(1 / real_time)}, real wo out: {round(1 / real_time_wo_out)}, synthetic: {round(1 / synthetic_time)}, frametime real: {real_time}, real wo out: {real_time_wo_out}, synthetic: {synthetic_time}',
-                flush=True)
+            if tqdm_bar and hasattr(tqdm_bar, 'set_postfix'):
+                tqdm_bar.set_postfix(fps_real=round(1 / real_time),
+                                     fps_without_output=round(1 / real_time_wo_out),
+                                     fps_synthetic=round(1 / synthetic_time))
+            else:
+                print(
+                    f'fps real: {round(1 / real_time)}, real wo out: {round(1 / real_time_wo_out)}, synthetic: {round(1 / synthetic_time)}, frametime real: {real_time}, real wo out: {real_time_wo_out}, synthetic: {synthetic_time}',
+                    flush=True)
             self.avg_fps.append((real_time, real_time_wo_out, synthetic_time))
             self.timestamp = time.time()
 
     def __del__(self):
         if self.measure_time:
-            print([round(1 / (sum(y) / len(y))) for y in zip(*self.avg_fps)])
+            print(f'AVG FPS: real, without out, synthetic: {[round(1 / (sum(y) / len(y))) for y in zip(*self.avg_fps)]}')
 
 
 def main():
