@@ -12,8 +12,6 @@
 #
 import os
 import sys
-from m2r2 import MdInclude
-
 
 sys.path.insert(0, os.path.abspath('../../'))
 
@@ -65,26 +63,3 @@ html_static_path = ['_static']
 # apply custom css
 def setup(app):
     app.add_css_file('custom.css')
-
-    # from m2r to make `mdinclude` work
-    app.add_config_value('no_underscore_emphasis', False, 'env')
-    app.add_config_value('m2r_parse_relative_links', False, 'env')
-    app.add_config_value('m2r_anonymous_references', False, 'env')
-    app.add_config_value('m2r_disable_inline_math', False, 'env')
-    app.add_directive('mdinclude', MdInclude)
-
-    # app.add_config_value('recommonmark_config', {
-    #     'enable_eval_rst': True,
-    # }, True)
-    # app.add_transform(AutoStructify)
-
-# source_parsers = {
-#     '.md': CommonMarkParser,
-# }
-#
-# html_theme_options = {
-#     'display_version': False,
-#     'navigation_depth': 2,
-# }
-
-
