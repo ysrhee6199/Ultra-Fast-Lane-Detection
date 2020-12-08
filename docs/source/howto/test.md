@@ -6,6 +6,8 @@ To test a model we use the testing algorithm provided by TuSimple for their [Lan
 # Add testing code
 Sadly the code from TuSimple contains no license, so it can't be included in this project. To use it you have to add the code by yourself.
 
+**Short version**: If you are using Linux, make sure you have git installed and run `sh ./add_testing_code.sh` from the projects root directory.
+
 1. Open [tusimple-benchmark/evaluate/lane.py](https://github.com/TuSimple/tusimple-benchmark/blob/master/evaluate/lane.py) and copy all the code
 2. From this project open the file src/runtime/utils/evaluation/lane.py in a text editor and paste the code from the previous step
 3. Either do one of the following steps

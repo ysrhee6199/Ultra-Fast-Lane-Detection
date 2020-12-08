@@ -131,4 +131,3 @@ diff --git a/src/runtime/utils/evaluation/lane.py b/src/runtime/utils/evaluation
 -    except Exception as e:
 -        print e.message
 -        sys.exit(e.message)
-\ No newline at end of file
