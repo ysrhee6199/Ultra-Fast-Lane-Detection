@@ -1,5 +1,8 @@
 import json
 import os
+from typing import List
+
+import numpy as np
 
 from src.runtime.modules.output.common import get_filename_date_string, map_x_to_image, evaluate_predictions
 from src.common.config.global_config import cfg, adv_cfg
@@ -25,7 +28,7 @@ class JsonOut:
         self.filepath = filepath
         self.out_file = open(self.filepath, 'w')
 
-    def out(self, y, names):
+    def out(self, y, names, frames: List[np.ndarray]):
         """ Generate json output to text file
 
         Args:
