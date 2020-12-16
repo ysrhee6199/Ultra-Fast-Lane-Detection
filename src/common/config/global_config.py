@@ -43,6 +43,7 @@ def process_modes():
             __set_config('input_mode', 'images')
             __set_config('output_mode', ['video'])
             __set_config('video_out_enable_live_video', True)
+            __set_config('batch_size', 1)
         elif cfg.mode == 'prod':
             __set_config('input_mode', 'camera')
             __set_config('output_mode', ['prod'])
