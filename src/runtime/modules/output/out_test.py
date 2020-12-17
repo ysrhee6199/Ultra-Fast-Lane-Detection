@@ -39,6 +39,9 @@ class TestOut:
             names: filenames for predictions, if empty
 
         """
+        if not names:
+            raise Exception('test output module requires "names", can\'t continue. You probably either selected the wrong in or out module.')
+
         for i in range(len(predictions)):
             # get x coordinates based on probabilities
             lanes = map_x_to_image(evaluate_predictions(predictions[i]))
