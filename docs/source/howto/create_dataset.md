@@ -15,7 +15,7 @@ A sample dataset containing 100 images is available here:
 ```{eval-rst}
 :download:`sample_dataset.zip <../_static/sample_dataset.zip>`
 ```
-You can use this dataset to this Howto.
+You can use this dataset to complete this Howto.
 
 
 #### Images
@@ -79,6 +79,19 @@ Now that we hopefully understand the dataset specifications we can start to conv
 This can be done with the script [split_dataset.py](../scripts). Simply open that file, insert your labels-file path and how much of your dataset should be used for testing and validation (as percent) and run it. This will create the files `train_labels.json, test.json, validate.json` in the same folder as your source file is located. Make sure these files don't exist, otherwise the script will fail.
 
 This script will take the data from different locations of the source file (per default: 10) to prevent the creation of unbalanced records.
+
+### Reduce amount of train data
+Training with large datasets will take a huge amount of time. Especially if the dataset was recorded at a high framerate this script could be used to decrease training time by creating a smaller train_labels file.
+
+The following screenshot shows the results of one of our largest datasets. As you can see, by scaling down the training dataset, the training duration can be drastically reduced with only a slight loss of accuracy. 
+
+![sketch labels](../_static/training_speed_scaled_train_set.png)
+
+You can use the script [create_smaller_train_set.py](../scripts) to scale your dataset. This script will create a new labels file and won't modify any other files.
+Edit the file and set your path, the scaling percentage and the filename to the function call at the bottom of the file. Now run the script.
+
+*Hint*: If you are using the provided sample dataset you should skip this step.
+
 
 ### create segmentation labels and index files
 These files can be created with the help of [create_seg_labels_and_index_files.py](../scripts). Run this file from the command line. A sample call could be:

@@ -12,6 +12,14 @@ scripts.create\_seg\_labels\_and\_index\_files module
    :undoc-members:
    :show-inheritance:
 
+scripts.create\_smaller\_train\_set module
+------------------------------------------
+
+.. automodule:: scripts.create_smaller_train_set
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 scripts.reduce\_h\_samples module
 ---------------------------------
 

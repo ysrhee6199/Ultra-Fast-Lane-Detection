@@ -65,6 +65,7 @@ The project has to be [set up](./howto/setup).
 1. Change to `docs/`
 2. Run `make html`
 
+Note: To create a docstring rst file use a command like `sphinx-apidoc --implicit-namespaces -o source/ ../scripts/` from inside the docs directory.
 
 ```{toctree}
 ---
