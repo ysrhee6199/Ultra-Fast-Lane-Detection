@@ -1,6 +1,9 @@
 # UFLD Documentation
 
-## Project overview
+Our master project consists of parts. One part is about the neural network, which is discussed in this documentation. 
+The other part is about generating datasets from CARLA. The documentation about this part can be found **[here](carla_ds:index)**. 
+
+## UFLD Project overview
 
 The project is splitted into two parts
 
@@ -48,9 +51,9 @@ For further examples see [HOWTOs](./howto/howtos.md)
 ## Collecting data from CARLA
 
 CARLA is one way to get training and test data. Sadly CARLA doesn't provide the required information over its API. As a
-result it's quite complicated to generate a dataset from CARLA. We wrote some scripts which make this possible. The
-scripts are located in the [scripts](./scripts) folder. Also have a
-look [on this HOWTO](howto/generate_dataset_from_carla.md) which explains their usage.
+result it's quite complicated to generate a dataset from CARLA. We wrote some scripts which make this possible. These 
+are located in a separate [project on Github](https://github.com/Glutamat42/Carla-Lane-Detection-Dataset-Generation) folder. 
+Also have a look [on this HOWTO](<carla_ds:howto/generate_dataset_from_carla>) which explains their usage.
 
 ## HOWTOs
 

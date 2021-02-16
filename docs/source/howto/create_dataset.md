@@ -1,7 +1,7 @@
 # HOWTO: Create a dataset
 This Howto explains how a to create a dataset and which specifications it has to fulfill. It does not cover the "data collecting" part. For this Howto i expect you to already have labeled data.
 
-- [This Howto](generate_dataset_from_carla) shows how to generate labeled data from CARLA.
+- [This Howto](<carla_ds:howto/generate_dataset_from_carla>) shows how to generate labeled data from CARLA.
 - The [TuSimple](https://github.com/TuSimple/tusimple-benchmark/issues/3) dataset is also compatible with this howto. The TuSimple section describes the particularities to be followed
 - The [CULane](https://xingangpan.github.io/projects/CULane.html) dataset can also be used here, but requires some additional steps which I will not treat here.
 

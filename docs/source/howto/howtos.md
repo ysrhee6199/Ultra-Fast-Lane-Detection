@@ -2,11 +2,11 @@
 The Howtos will guide you through the whole process starting with the collection of data till production use. 
 
 ## Setup
-[CARLA Setup](./carla_setup.md)    
+[CARLA Setup](<carla_ds:howto/carla_setup>)    
 [UFLD Setup](./setup.md)  
 
 ## Create dataset
-[Collect data from CARLA](./generate_dataset_from_carla.md)    
+[Collect data from CARLA](<carla_ds:howto/generate_dataset_from_carla>)  
 [Convert dataset to meet the specifications](./create_dataset.md)  
 
 ## Train
@@ -23,9 +23,7 @@ The Howtos will guide you through the whole process starting with the collection
 ---
 maxdepth: 2
 ---
-carla_setup.md
 setup.md
-generate_dataset_from_carla.md
 create_dataset.md
 create_a_profile.md
 train.md
