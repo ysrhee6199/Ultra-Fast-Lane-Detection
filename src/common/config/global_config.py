@@ -68,7 +68,7 @@ def merge_config() -> Config:
         cfg[item[0]] = item[1]
 
     for k, v in vars(args).items():
-        if v:
+        if v is not None:
             print('update ', (k, v), ' config')
             setattr(cfg, k, v)
     return cfg
