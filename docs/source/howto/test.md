@@ -43,8 +43,11 @@ Accuracy 0.9383928571428571
 FP 0.15
 FN 0.15
 ```
-For the accuracy we probably want to achieve values above 0,97/0,98. 
-The values are that bad here because the example dataset is way too small.
+
+Additionally, it writes the results to `test_results.csv` in the model's directory.
+
+For the accuracy we would like to get into the range of 0,97/0,98.
+The values are that low here because the example dataset is way too small.
 
 
 # Visual test

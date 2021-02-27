@@ -10,7 +10,8 @@ from src.common.config.global_config import cfg, adv_cfg
 
 class TestOut:
     """
-    This module allows to validate predictions against known labels. It prints the accuracy after the test completed
+    This module allows to validate predictions against known labels. It prints the accuracy after the test completed.
+    Additionally it writes its results as csv to the directory where the trained model is located.
     """
     def __init__(self, out_file: str = cfg.test_validation_data):
         """
@@ -66,5 +67,10 @@ class TestOut:
 
         res = self.LaneEval.bench_one_submit(self.lanes_pred, lanes_comp)
         res = json.loads(res)
-        for r in res:
-            print(r['name'], r['value'])
+
+        with open(os.path.join(os.path.dirname(cfg.trained_model), 'test_results.csv'), 'a') as f:
+            line = [self.compare_file, os.path.basename(cfg.trained_model)]
+            for r in res:
+                print(r['name'], r['value'])
+                line.append(str(r['value']))
+            f.write(";".join(line) + '\n')
