@@ -1,5 +1,7 @@
 """
 Default values for all config options
+
+IMPORTANT: Changes to the values of the default config will probably brick existing configs!
 """
 
 # BASICS

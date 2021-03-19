@@ -62,7 +62,7 @@ class VisualOut:
         if enable_video_export:
             # init video out
             fourcc = cv2.VideoWriter_fourcc(*'MJPG')
-            out_filename = f'{get_filename_date_string()}_{cfg.dataset}.avi'
+            out_filename = f'{cfg.dataset}{cfg.note}_{os.path.basename(cfg.trained_model).split(".")[0]}_{get_filename_date_string()}.avi'
             out_full_path = os.path.join(cfg.work_dir, out_filename)
             print(out_full_path)
             self.vout = cv2.VideoWriter(out_full_path, fourcc, 30.0, (cfg.img_width, cfg.img_height))

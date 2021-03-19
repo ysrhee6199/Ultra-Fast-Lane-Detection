@@ -33,6 +33,7 @@ def input_images(input_file, data_root):
                 # if lane[j] is not -2:
                     cv2.circle(image, (lane[j], dict['h_samples'][j]), 5, get_lane_color(i), -1)
 
+        print(dict['raw_file'])
         cv2.imshow('video', image)
         cv2.waitKey(10)
         # vout.write(image)

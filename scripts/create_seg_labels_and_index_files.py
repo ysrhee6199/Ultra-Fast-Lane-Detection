@@ -170,16 +170,12 @@ if __name__ == "__main__":
         raise Exception('train_files or test_files missing')
 
     # training set
-    names, line_txt = get_tusimple_list(args.root,
-                                        args.train_files.split(',') if args.train_files else ['label_data_0601.json',
-                                                                                              'label_data_0531.json',
-                                                                                              'label_data_0313.json'])
+    names, line_txt = get_tusimple_list(args.root, args.train_files.split(','))
     # generate segmentation and training list for training
     generate_segmentation_and_train_list(args.root, line_txt, names)
 
     # testing set
-    names, line_txt = get_tusimple_list(args.root,
-                                        args.test_files.split(',') if args.test_files else ['test_tasks_0627.json'])
+    names, line_txt = get_tusimple_list(args.root, args.test_files.split(','))
     # generate testing set for testing
     with open(os.path.join(args.root, 'test.txt'), 'w') as fp:
         for name in names:
