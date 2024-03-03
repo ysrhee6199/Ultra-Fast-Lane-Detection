@@ -40,4 +40,4 @@ def input_images(input_file, data_root):
 
 
 if __name__ == '__main__':
-    input_images('train_gt.json', '/home/markus/OneDrive/Projekt_-_Fast_Lane_Detection/Datensätze/Datensatz07/')
+    input_images('train_gt.json', '/home/nvidia/Carla-Lane-Detection-Dataset-Generation/src/data/dataset/Town04_Opt/')

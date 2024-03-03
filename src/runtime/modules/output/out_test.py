@@ -62,6 +62,7 @@ class TestOut:
             raise Exception('failed to load file with validation data')
 
         # some basic validation
+        print(self.compare_file)
         if len(self.lanes_pred) != len(lanes_comp):
             raise Exception('length of predicted data does not match compare data')
 

@@ -53,4 +53,4 @@ def split_dataset(file_in, test_split: int = 10, validate_split: int = 10):
 
 
 if __name__ == '__main__':
-    split_dataset('/home/markus/OneDrive/Projekt_-_Fast_Lane_Detection/Datensätze/Datensatz07/train_gt.json', 10, 10)
+    split_dataset('/home/nvidia//Carla-Lane-Detection-Dataset-Generation/src/data/dataset/Town04_Opt/train_gt.json', 10, 10)

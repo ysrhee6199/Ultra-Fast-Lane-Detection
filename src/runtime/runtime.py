@@ -55,7 +55,7 @@ def setup_net():
     # method would not be affected.
     # .eval: set module to evaluation mode
     net.eval()
-
+  
     # load and apply our trained model
     state_dict = torch.load(cfg.trained_model, map_location='cpu')['model']
     compatible_state_dict = {}

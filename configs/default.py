@@ -16,7 +16,7 @@ data_root: str = None
 #: number of samples to process in one batch
 batch_size: int = 4
 #: define which resnet backbone to use, allowed values - ['18', '34', '50', '101', '152', '50next', '101next', '50wide', '101wide']
-backbone: str = '18'
+backbone: str = '34'
 #: x resolution of nn, just like h_samples are the y resolution
 griding_num: int = 100
 #: suffix for working directory (probably good to give them a rememberable name
@@ -50,7 +50,7 @@ train_img_width: int = 800
 
 # TRAIN
 #: adding extra segmentation to improve training, read the ufld paper for more details
-use_aux: bool = True
+use_aux: bool = False
 #: set via cli, required if using distributed learning (which i am not supporting, but also did not remove related code by purpose)
 local_rank = None
 #: number of epochs to train

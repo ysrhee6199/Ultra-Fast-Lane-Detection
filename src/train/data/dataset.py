@@ -91,6 +91,7 @@ class LaneClsDataset(torch.utils.data.Dataset):
 
         all_idx = np.zeros((self.num_lanes, len(sample_tmp), 2))
         for i, r in enumerate(sample_tmp):
+            
             label_r = np.asarray(label)[int(round(r))]
             for lane_idx in range(1, self.num_lanes + 1):
                 pos = np.where(label_r == lane_idx)[0]

@@ -33,4 +33,4 @@ def create_smaller_train_set(file_in, keep: int = 10, out_filename='small_train_
 
 
 if __name__ == '__main__':
-    create_smaller_train_set('/home/markus/PycharmProjects/datasets/Datensatz08+10/train_labels.json', int(100/5), '1_5_train_labels.json')
+    create_smaller_train_set('/home/nvidia/Carla-Lane-Detection-Dataset-Generation/src/data/dataset/Town04_Opt/train_labels.json', int(100/5), '1_5_train_labels.json')

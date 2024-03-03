@@ -1,0 +1,9 @@
+dataset = 'Example profile'
+data_root = '/home/nvidia/sample_dataset/'
+work_dir = '/home/nvidia/sample_dataset/'
+note = '_ex_prof'
+h_samples = [x/720 for x in range(160, 711, 10)]
+img_height = 720
+img_width = 1280
+epoch = 100
+batch_size = 16

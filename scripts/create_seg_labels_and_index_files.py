@@ -108,7 +108,7 @@ def generate_segmentation_and_train_list(root, line_txt, names):
         k_pos.sort()
 
         label_path = names[i][:-3] + 'png'
-        label = np.zeros((720, 1280), dtype=np.uint8)
+        label = np.zeros((480, 640), dtype=np.uint8)
         bin_label = [0, 0, 0, 0]
         if len(k_neg) == 1:  # for only one lane in the left
             which_lane = np.where(ks == k_neg[0])[0][0]
